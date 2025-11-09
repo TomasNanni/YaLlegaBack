@@ -1,0 +1,6 @@
+@YaLlegaBack_HostAddress = http://localhost:5198
+
+GET {{YaLlegaBack_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
