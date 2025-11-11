@@ -17,34 +17,6 @@ namespace YaLlegaBack.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            Restaurant mcdonald = new Restaurant()
-            {
-                Id = 1,
-                UserId = 1,
-                Name = "mcdonald",
-                OpeningTime = new TimeOnly(9, 0, 0),
-                ClosingTime = new TimeOnly(22, 0, 0),
-                UrlLogoImage = "string",
-                UrlBannerImage = "string",
-                OpenDays = "mondaytuesday",
-                Contact = "+54",
-                User = tomas,
-            };
-
-            User tomas = new User()
-            {
-                FirstName = "tomas",
-                LastName = "nanni",
-                EmailAdress = "tomas@gmail.com",
-                Password = "contraseña",
-                Restaurant = mcdonald,
-            };
-
-
-            modelBuilder.Entity<User>().HasData(tomas);
-            modelBuilder.Entity<Restaurant>().HasData(mcdonald);
-
             base.OnModelCreating(modelBuilder);
         }
     }
