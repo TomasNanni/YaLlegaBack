@@ -14,17 +14,19 @@ namespace YaLlega.Repositories
         {
             _context = context;
         }
-        public void Create(User newUser)
+        public int Create(User newUser)
         {
-            _context.Users.Add(newUser);
+            var createdUser = _context.Users.Add(newUser).Entity;
             _context.SaveChanges();
-            return;
+            return createdUser.Id;
         }
 
         public bool CheckIfUserExists(int userId)
         {
             return _context.Users.Any(user => user.Id == userId);
         }
+
+
 
         public List<User> GetAll()
         {
@@ -35,17 +37,21 @@ namespace YaLlega.Repositories
         {
             return _context.Users.FirstOrDefault(user => user.Id == userId);
         }
+        public User? GetByEmail(string userEmail)
+        {
+            return _context.Users.FirstOrDefault(user => user.EmailAddress == userEmail);
+        }
 
         public User? ValidateUser(AuthDto request)
         {
-            return _context.Users.FirstOrDefault(user => user.EmailAdress == request.EmailAddress && user.Password == request.Password);
+            return _context.Users.FirstOrDefault(user => user.EmailAddress == request.EmailAddress && user.Password == request.Password);
         }
 
         public void Update(User updatedUser, int userId)
         {
             var userToEdit = _context.Users.First(u => u.Id == userId);
             userToEdit.FirstName = updatedUser.FirstName;
-            userToEdit.EmailAdress = updatedUser.EmailAdress;
+            userToEdit.EmailAddress = updatedUser.EmailAddress;
             userToEdit.LastName = updatedUser.LastName;
             _context.SaveChanges();
         }

@@ -11,15 +11,17 @@ namespace YaLlega.Interfaces
 {
     public interface IUserRepository
     {
-        public void Create(User newUser);
+        public int Create(User newUser);
 
         public bool CheckIfUserExists(int userId);
 
         public List<User> GetAll();
 
         public User? GetById(int userId);
+        public User? GetByEmail(string userEmail)
         public User? ValidateUser(AuthDto request);
         public void Update(User updatedUser, int userId);
         public void Delete(int userId);
+
     }
 }

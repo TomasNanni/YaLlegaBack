@@ -9,12 +9,12 @@ namespace YaLlega.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        [Required]
-        [EmailAddress]
+
         public string EmailAdress { get; set; }
-        [Required]
+
         public string Password { get; set; }
+        [Compare("Password")]
+        public string SecondPassword{ get; set; }
         public Restaurant Restaurant { get; set; }
-        public int RestaurantId { get; set; }
     }
 }

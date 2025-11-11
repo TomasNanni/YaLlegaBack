@@ -7,7 +7,7 @@ namespace YaLlegaBack.Interfaces
 {
     public interface IUserService
     {
-        public void Create(NewUserDataDTO newUser);
+        public int? Create(NewUserDataDTO newUser);
         public bool CheckIfUserExists(int userId);
         public IEnumerable<UserDataDto> GetAll();
         public UserDataDto? GetById(int userId);

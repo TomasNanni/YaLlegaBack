@@ -1,4 +1,6 @@
-﻿using YaLlega.Interfaces;
+﻿using System.Runtime.CompilerServices;
+using YaLlega.Entities;
+using YaLlega.Interfaces;
 using YaLlega.Models;
 using YaLlega.Repositories;
 using YaLlega1.Models;
@@ -11,33 +13,57 @@ namespace YaLlegaBack.Services
     {
         private readonly IUserRepository _userRepository;
         
-        private readonly RestaurantService _restaurantService;
+        private readonly IRestaurantService _restaurantService;
 
-        public UserService(IUserRepository userRepository, RestaurantService restaurantService)
+        public UserService(IUserRepository userRepository, IRestaurantService restaurantService)
         {
             _userRepository = userRepository;
             _restaurantService = restaurantService;
         }
         public bool CheckIfUserExists(int userId)
         {
-            if (_userRepository.CheckIfUserExists(userId))
+            return _userRepository.CheckIfUserExists(userId);
+        }
+
+        public int? Create(NewUserDataDTO newUser)
+        {
+            if (_userRepository.GetByEmail(newUser.EmailAdress) == null)
             {
-                return true;
+                return null;
+            }
+            var user = new User()
+            {
+                FirstName = newUser.FirstName,
+                LastName = newUser.LastName,
+                EmailAddress = newUser.EmailAdress,
+                Password = newUser.Password,
+                Restaurant = newUser.Restaurant,
+            };
+            var newUserId = _userRepository.Create(user);
+            return newUserId;
+        }
+
+        public void Delete(int userId)
+        {
+            if (CheckIfUserExists(userId))
+            {
+                var user = GetById(userId);
+                Restaurant restaurant = user.Restaurant;
+                int restaurantId = restaurant.Id;
+                if (_restaurantService.CheckIfRestaurantExists(restaurantId))
+                {
+                    _restaurantService.Delete(restaurantId);
+                    _userRepository.Delete(userId);
+                }
+                else
+                {
+                    return ("El usuario no tiene restaurante asociado.");
+                }
             }
             else
             {
                 return false;
             }
-        }
-
-        public void Create(NewUserDataDTO newUser)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int userId)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<UserDataDto> GetAll()

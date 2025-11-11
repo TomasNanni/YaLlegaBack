@@ -14,8 +14,6 @@ namespace YaLlega.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public DateTime CreationTime { get; set; }
-        [Required]
         public ICollection<Product> Products{ get; set; } = new List<Product>();
         [Required]
         public int RestaurantId { get; set; }
