@@ -15,11 +15,14 @@ namespace YaLlega.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
+        [StringLength(20)]
         public string FirstName { get; set; }
+        [StringLength(20)]
         public string LastName { get; set; }
         [Required]
         [EmailAddress]
-        public string EmailAdress { get; set; }
+        [StringLength(30)]
+        public string EmailAddress { get; set; }
         [Required]
         [PasswordPropertyText]
         public string Password { get; set; }

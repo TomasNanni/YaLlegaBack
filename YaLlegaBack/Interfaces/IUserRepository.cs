@@ -9,7 +9,7 @@ using YaLlega1.Models;
 
 namespace YaLlega.Interfaces
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
         public void Create(User newUser);
 

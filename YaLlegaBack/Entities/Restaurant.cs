@@ -15,6 +15,7 @@ namespace YaLlega.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
+        [StringLength(20, MinimumLength = 1)]
         public string Name { get; set; }
         [Required]
         public string UrlLogoImage { get; set; }
@@ -27,9 +28,7 @@ namespace YaLlega.Entities
         public TimeOnly ClosingTime { get; set; }
         [Required]
         public string Contact { get; set; }
-
         public int UserId { get; set; }
-
         [ForeignKey("UserId")]
         [Required]
         public User User { get; set; }

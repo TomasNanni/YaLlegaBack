@@ -13,7 +13,8 @@ namespace YaLlega.Entities
         [Key]
         public int Id { get; set; }
         [Required]
-        public string FirstName { get; set; }
+        [StringLength(20 , MinimumLength = 1)]
+        public string Name { get; set; }
         public string Description { get; set; }
         public int RestaurantId { get; set; }
 
