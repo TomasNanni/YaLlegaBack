@@ -43,7 +43,7 @@ namespace YaLlegaBack.Services
             return newUserId;
         }
 
-        public void Delete(int userId)
+        public string Delete(int userId)
         {
             if (CheckIfUserExists(userId))
             {
@@ -54,21 +54,28 @@ namespace YaLlegaBack.Services
                 {
                     _restaurantService.Delete(restaurantId);
                     _userRepository.Delete(userId);
+                    return ("Usuario y restaurante borrados correctamente.");
                 }
                 else
                 {
-                    return ("El usuario no tiene restaurante asociado.");
+                    return ("El usuario no tiene un restaurante asociado.");
                 }
             }
             else
             {
-                return false;
+                return ("El usuario no existe.");
             }
         }
 
         public IEnumerable<UserDataDto> GetAll()
         {
-            throw new NotImplementedException();
+
+            var users = _userRepository.GetAll();
+            IEnumerable<UserDataDto> usersData = new List<UserDataDto>();
+            foreach (var user in users)
+            {
+                usersData.
+            }
         }
 
         public UserDataDto? GetById(int userId)

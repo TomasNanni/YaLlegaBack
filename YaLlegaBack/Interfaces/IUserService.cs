@@ -13,6 +13,6 @@ namespace YaLlegaBack.Interfaces
         public UserDataDto? GetById(int userId);
         public UserDataDto? ValidateUser(AuthDto request);
         public void Update(UpdatedUserDto updatedUser, int userId);
-        public void Delete(int userId);
+        public string Delete(int userId);
     }
 }
