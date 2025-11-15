@@ -1,4 +1,8 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Humanizer;
+using System.Globalization;
+using System.Net.Mail;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using YaLlega.Entities;
 using YaLlega.Interfaces;
 using YaLlega.Models;
@@ -69,28 +73,107 @@ namespace YaLlegaBack.Services
 
         public IEnumerable<UserDataDto> GetAll()
         {
-
-            var users = _userRepository.GetAll();
-            IEnumerable<UserDataDto> usersData = new List<UserDataDto>();
-            foreach (var user in users)
+            return _userRepository.GetAll().Select(user =>
+            new UserDataDto
             {
-                usersData.
-            }
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                EmailAddress = user.EmailAddress,
+                Restaurant = user.Restaurant,
+            });
         }
 
         public UserDataDto? GetById(int userId)
         {
-            throw new NotImplementedException();
+            var user = _userRepository.GetById(userId);
+            if (user != null)
+            {
+                return new UserDataDto
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    EmailAddress = user.EmailAddress,
+                    Restaurant = user.Restaurant,
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public void Update(UpdatedUserDto updatedUser, int userId)
+        public UserDataDto? GetByEmail(string email)
         {
-            throw new NotImplementedException();
+            var user = _userRepository.GetByEmail(email);
+            if (user != null)
+            {
+                return new UserDataDto
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    EmailAddress = user.EmailAddress,
+                    Restaurant = user.Restaurant,
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string Update(UpdatedUserDto updatedUser, int userId)
+        {
+            if (CheckIfUserExists(userId) == false)
+            {
+                return ("El usuario que quizo actualizar no existe.");
+            }
+            if (string.IsNullOrWhiteSpace(updatedUser.EmailAdress) || IsValidEmail(updatedUser.EmailAdress) == false) 
+            {
+                return ("La dirección de email no existe o no es valida.");
+            }
+            if (GetByEmail(updatedUser.EmailAdress) != null)
+            {
+                return ("Ya existe un usuario con la dirección de correo ingresada.");
+            }
+            User user = new User
+            {
+                FirstName = updatedUser.FirstName,
+                LastName = updatedUser.LastName,
+                EmailAddress = updatedUser.EmailAdress,
+            };
+            _userRepository.Update(user, userId);
+            return ("Usuario actualizado correctamente");
+        }
+
+        public bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public UserDataDto? ValidateUser(AuthDto request)
         {
-            throw new NotImplementedException();
+            var user = _userRepository.ValidateUser(request);
+            if (user == null)
+            {
+                return null;
+            }
+            else
+            {
+                return new UserDataDto
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    EmailAddress = user.EmailAddress,
+                };
+            }
         }
     }
 }

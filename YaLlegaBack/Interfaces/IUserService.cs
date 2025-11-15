@@ -11,8 +11,9 @@ namespace YaLlegaBack.Interfaces
         public bool CheckIfUserExists(int userId);
         public IEnumerable<UserDataDto> GetAll();
         public UserDataDto? GetById(int userId);
+        public UserDataDto? GetByEmail(int userId);
         public UserDataDto? ValidateUser(AuthDto request);
-        public void Update(UpdatedUserDto updatedUser, int userId);
+        public string Update(UpdatedUserDto updatedUser, int userId);
         public string Delete(int userId);
     }
 }

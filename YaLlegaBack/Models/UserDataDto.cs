@@ -8,7 +8,7 @@ namespace YaLlegaBack.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string EmailAdress { get; set; }
+        public string EmailAddress { get; set; }
         public Restaurant Restaurant { get; set; }
     }
 }
