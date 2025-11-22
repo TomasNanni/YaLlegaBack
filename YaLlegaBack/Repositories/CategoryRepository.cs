@@ -2,7 +2,7 @@
 
 namespace YaLlegaBack.Repositories
 {
-    public class CartRepository : ICartRepository
+    public class CategoryRepository : ICategoryRepository
     {
     }
 }

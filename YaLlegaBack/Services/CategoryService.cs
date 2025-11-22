@@ -2,7 +2,7 @@
 
 namespace YaLlegaBack.Services
 {
-    public class CartService : ICartService
+    public class CategoryService : ICategoryService
     {
     }
 }

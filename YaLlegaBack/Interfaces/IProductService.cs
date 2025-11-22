@@ -1,6 +1,6 @@
 ﻿namespace YaLlegaBack.Interfaces
 {
-    public interface IProdcutService
+    public interface IProductService
     {
     }
 }

@@ -21,7 +21,7 @@ namespace YaLlegaBack.Controllers
             return Ok(_userService.GetAll());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public IActionResult GetOneById(int id)
         {
             if (id == 0)
@@ -30,6 +30,24 @@ namespace YaLlegaBack.Controllers
             }
 
             GetUserByIdDto? user = _userService.GetById(id);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        [HttpGet("email/{email}")]
+        public IActionResult GetOneByEmail(string email)
+        {
+            if (email == null)
+            {
+                return BadRequest("Debe ingresar una dirección de email.");
+            }
+
+            GetUserByIdDto? user = _userService.GetByEmail(email);
 
             if (user is null)
             {

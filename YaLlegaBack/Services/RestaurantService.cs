@@ -1,6 +1,8 @@
-﻿namespace YaLlegaBack.Services
+﻿using YaLlegaBack.Interfaces;
+
+namespace YaLlegaBack.Services
 {
-    public class RestaurantService
+    public class RestaurantService : IRestaurantService
     {
     }
 }

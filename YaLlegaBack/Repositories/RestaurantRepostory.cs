@@ -1,6 +1,8 @@
-﻿namespace YaLlegaBack.Repositories
+﻿using YaLlegaBack.Interfaces;
+
+namespace YaLlegaBack.Repositories
 {
-    public class RestaurantRepostory
+    public class RestaurantRepostory : IRestaurantRepository
     {
     }
 }
