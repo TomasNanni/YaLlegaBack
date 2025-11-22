@@ -6,28 +6,51 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace YaLlegaBack.Migrations
 {
     /// <inheritdoc />
-    public partial class primeraMigracion : Migration
+    public partial class inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Restaurants",
+                name: "Users",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    LogoImage = table.Column<string>(type: "TEXT", nullable: false),
-                    UrlBannerImage = table.Column<string>(type: "TEXT", nullable: false),
-                    OpeningTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
-                    ClosingTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
-                    Contact = table.Column<string>(type: "TEXT", nullable: false)
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    EmailAddress = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Restaurants", x => x.id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Restaurants",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    UrlLogoImage = table.Column<string>(type: "TEXT", nullable: false),
+                    UrlBannerImage = table.Column<string>(type: "TEXT", nullable: false),
+                    OpenDays = table.Column<string>(type: "TEXT", nullable: false),
+                    OpeningTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
+                    ClosingTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
+                    Contact = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Restaurants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Restaurants_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,7 +59,6 @@ namespace YaLlegaBack.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     RestaurantId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -46,7 +68,7 @@ namespace YaLlegaBack.Migrations
                         name: "FK_Carts_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -56,7 +78,7 @@ namespace YaLlegaBack.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     RestaurantId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -67,30 +89,7 @@ namespace YaLlegaBack.Migrations
                         name: "FK_Categories_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    EmailAdress = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
-                    RestaurantId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Restaurants_RestaurantId",
-                        column: x => x.RestaurantId,
-                        principalTable: "Restaurants",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -143,11 +142,6 @@ namespace YaLlegaBack.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "EmailAdress", "FirstName", "LastName", "Password", "RestaurantId" },
-                values: new object[] { 1, "tomas@gmail.com", "tomas", "nanni", "contraseña", 0 });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Carts_RestaurantId",
                 table: "Carts",
@@ -169,9 +163,16 @@ namespace YaLlegaBack.Migrations
                 column: "CartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RestaurantId",
+                name: "IX_Restaurants_UserId",
+                table: "Restaurants",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_EmailAddress",
                 table: "Users",
-                column: "RestaurantId");
+                column: "EmailAddress",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -179,9 +180,6 @@ namespace YaLlegaBack.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CategoryProduct");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Categories");
@@ -194,6 +192,9 @@ namespace YaLlegaBack.Migrations
 
             migrationBuilder.DropTable(
                 name: "Restaurants");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

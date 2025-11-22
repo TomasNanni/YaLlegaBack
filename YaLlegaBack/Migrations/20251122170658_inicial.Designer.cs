@@ -11,8 +11,8 @@ using YaLlegaBack.Data;
 namespace YaLlegaBack.Migrations
 {
     [DbContext(typeof(YaLlegaBackContext))]
-    [Migration("20251108210130_primeraMigracion")]
-    partial class primeraMigracion
+    [Migration("20251122170658_inicial")]
+    partial class inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,9 +41,6 @@ namespace YaLlegaBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("RestaurantId")
                         .HasColumnType("INTEGER");
 
@@ -64,8 +61,9 @@ namespace YaLlegaBack.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RestaurantId")
@@ -120,7 +118,7 @@ namespace YaLlegaBack.Migrations
 
             modelBuilder.Entity("YaLlega.Entities.Restaurant", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -131,15 +129,12 @@ namespace YaLlegaBack.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LogoImage")
+                    b.Property<string>("OpenDays")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -150,7 +145,17 @@ namespace YaLlegaBack.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.Property<string>("UrlLogoImage")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Restaurants");
                 });
@@ -161,41 +166,31 @@ namespace YaLlegaBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("EmailAdress")
+                    b.Property<string>("EmailAddress")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RestaurantId");
+                    b.HasIndex("EmailAddress")
+                        .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            EmailAdress = "tomas@gmail.com",
-                            FirstName = "tomas",
-                            LastName = "nanni",
-                            Password = "contraseña",
-                            RestaurantId = 0
-                        });
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -244,15 +239,15 @@ namespace YaLlegaBack.Migrations
                     b.Navigation("Cart");
                 });
 
-            modelBuilder.Entity("YaLlega.Entities.User", b =>
+            modelBuilder.Entity("YaLlega.Entities.Restaurant", b =>
                 {
-                    b.HasOne("YaLlega.Entities.Restaurant", "Restaurant")
-                        .WithMany()
-                        .HasForeignKey("RestaurantId")
+                    b.HasOne("YaLlega.Entities.User", "User")
+                        .WithOne("Restaurant")
+                        .HasForeignKey("YaLlega.Entities.Restaurant", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Restaurant");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("YaLlega.Entities.Cart", b =>
@@ -265,6 +260,12 @@ namespace YaLlegaBack.Migrations
                     b.Navigation("Carts");
 
                     b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("YaLlega.Entities.User", b =>
+                {
+                    b.Navigation("Restaurant")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

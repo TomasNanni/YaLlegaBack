@@ -17,8 +17,16 @@ namespace YaLlegaBack.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.EmailAddress)
+                .IsUnique();
+
+            modelBuilder.Entity<Restaurant>()
+                .HasOne(r => r.User)
+                .WithOne(u => u.Restaurant)
+                .HasForeignKey<Restaurant>(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

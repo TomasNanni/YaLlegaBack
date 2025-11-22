@@ -51,19 +51,8 @@ namespace YaLlegaBack.Services
         {
             if (CheckIfUserExists(userId))
             {
-                var user = GetById(userId);
-                Restaurant restaurant = user.Restaurant;
-                int restaurantId = restaurant.Id;
-                if (_restaurantService.CheckIfRestaurantExists(restaurantId))
-                {
-                    _restaurantService.Delete(restaurantId);
-                    _userRepository.Delete(userId);
-                    return ("Usuario y restaurante borrados correctamente.");
-                }
-                else
-                {
-                    return ("El usuario no tiene un restaurante asociado.");
-                }
+                _userRepository.Delete(userId);
+                return ("Usuario y restaurante borrados correctamente.");
             }
             else
             {
@@ -83,17 +72,17 @@ namespace YaLlegaBack.Services
             });
         }
 
-        public UserDataDto? GetById(int userId)
+        public GetUserByIdDto? GetById(int userId)
         {
             var user = _userRepository.GetById(userId);
             if (user != null)
             {
-                return new UserDataDto
+                return new GetUserByIdDto
                 {
+                    Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     EmailAddress = user.EmailAddress,
-                    Restaurant = user.Restaurant,
                 };
             }
             else
@@ -102,17 +91,17 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public UserDataDto? GetByEmail(string email)
+        public GetUserByIdDto? GetByEmail(string email)
         {
             var user = _userRepository.GetByEmail(email);
             if (user != null)
             {
-                return new UserDataDto
+                return new GetUserByIdDto
                 {
+                    Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     EmailAddress = user.EmailAddress,
-                    Restaurant = user.Restaurant,
                 };
             }
             else

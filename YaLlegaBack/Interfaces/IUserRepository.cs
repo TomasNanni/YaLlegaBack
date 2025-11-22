@@ -18,7 +18,7 @@ namespace YaLlega.Interfaces
         public List<User> GetAll();
 
         public User? GetById(int userId);
-        public User? GetByEmail(string userEmail)
+        public User? GetByEmail(string userEmail);
         public User? ValidateUser(AuthDto request);
         public void Update(User updatedUser, int userId);
         public void Delete(int userId);
