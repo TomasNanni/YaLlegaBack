@@ -7,14 +7,21 @@ namespace YaLlega.Models
 {
     public class NewUserDataDTO
     {
+        [Required]
+        [StringLength(20)]
         public string FirstName { get; set; }
+        [StringLength(20)]
         public string LastName { get; set; }
-
-        public string EmailAdress { get; set; }
-
+        [Required]
+        [EmailAddress]
+        [StringLength(30)]
+        public string EmailAddress { get; set; }
+        [Required]
+        [PasswordPropertyText]
         public string Password { get; set; }
+        [Required]
+        [PasswordPropertyText]
         [Compare("Password")]
         public string SecondPassword{ get; set; }
-        public Restaurant Restaurant { get; set; }
     }
 }

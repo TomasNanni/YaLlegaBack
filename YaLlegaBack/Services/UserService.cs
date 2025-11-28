@@ -31,7 +31,7 @@ namespace YaLlegaBack.Services
 
         public int? Create(NewUserDataDTO newUser)
         {
-            if (_userRepository.GetByEmail(newUser.EmailAdress) == null)
+            if (_userRepository.GetByEmail(newUser.EmailAddress) != null)
             {
                 return null;
             }
@@ -39,9 +39,9 @@ namespace YaLlegaBack.Services
             {
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
-                EmailAddress = newUser.EmailAdress,
+                EmailAddress = newUser.EmailAddress,
                 Password = newUser.Password,
-                Restaurant = newUser.Restaurant,
+                //Restaurant = newUser.Restaurant,
             };
             var newUserId = _userRepository.Create(user);
             return newUserId;
