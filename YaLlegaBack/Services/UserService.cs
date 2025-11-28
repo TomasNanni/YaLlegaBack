@@ -47,16 +47,24 @@ namespace YaLlegaBack.Services
             return newUserId;
         }
 
-        public string Delete(int userId)
+        public UsersServiceResult Delete(int userId)
         {
             if (CheckIfUserExists(userId))
             {
                 _userRepository.Delete(userId);
-                return ("Usuario y restaurante borrados correctamente.");
+                return new UsersServiceResult
+                {
+                    Message = "Usuario y restaurante borrados correctamente.",
+                    StatusCode = 200,
+                };
             }
             else
             {
-                return ("El usuario no existe.");
+                return new UsersServiceResult
+                {
+                    Message = "El usuario no existe.",
+                    StatusCode = 400,
+                };
             }
         }
 
@@ -110,19 +118,31 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public string Update(UpdatedUserDto updatedUser, int userId)
+        public UsersServiceResult Update(UpdatedUserDto updatedUser, int userId)
         {
             if (CheckIfUserExists(userId) == false)
             {
-                return ("El usuario que quizo actualizar no existe.");
+                return new UsersServiceResult
+                {
+                    Message = "El usuario que quizo actualizar no existe.",
+                    StatusCode = 400,
+                };
             }
             if (string.IsNullOrWhiteSpace(updatedUser.EmailAdress) || IsValidEmail(updatedUser.EmailAdress) == false) 
             {
-                return ("La dirección de email no existe o no es valida.");
+                return new UsersServiceResult
+                {
+                    Message = "La dirección de email no existe o no es valida.",
+                    StatusCode = 400,
+                };
             }
             if (GetByEmail(updatedUser.EmailAdress) != null)
             {
-                return ("Ya existe un usuario con la dirección de correo ingresada.");
+                return new UsersServiceResult
+                {
+                    Message = "Ya existe un usuario con la dirección de correo ingresada.",
+                    StatusCode = 400,
+                };
             }
             User user = new User
             {
@@ -131,7 +151,11 @@ namespace YaLlegaBack.Services
                 EmailAddress = updatedUser.EmailAdress,
             };
             _userRepository.Update(user, userId);
-            return ("Usuario actualizado correctamente");
+            return new UsersServiceResult
+            {
+                Message = "Usuario actualizado correctamente.",
+                StatusCode = 200,
+            };
         }
 
         public bool IsValidEmail(string email)

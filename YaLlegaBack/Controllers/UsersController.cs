@@ -87,27 +87,15 @@ namespace YaLlegaBack.Controllers
         [HttpPut("Update")]
         public IActionResult UpdateUser(UpdatedUserDto updatedUser ,int userToUpdateId)
         {
-            string message = _userService.Update(updatedUser ,userToUpdateId);
-            return message switch
-            {
-                "Usuario actualizado correctamente." => Ok(message),
-                "El usuario que quiso actualizar no existe." => NotFound(message),
-                "La dirección de email no existe o no es válida." => BadRequest(message),
-                "Ya existe un usuario con la dirección de correo ingresada." => BadRequest(message),
-                _ => StatusCode(500, "Error inesperado: " + message)
-            };
+            UsersServiceResult result = _userService.Update(updatedUser, userToUpdateId);
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpDelete("Delete{userId}")]
         public IActionResult Delete(int userId)
         {
-            string message = _userService.Delete(userId);
-            return message switch
-            {
-                "Usuario y restaurante borrados correctamente." => Ok(message),   
-                "El usuario no existe." => NotFound(message),                     
-                _ => StatusCode(500, "Error inesperado: " + message)              
-            };
+            UsersServiceResult message = _userService.Delete(userId);
+            return StatusCode(message.StatusCode, message.Message);
         }
     }
 }
