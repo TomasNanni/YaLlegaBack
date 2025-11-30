@@ -2,7 +2,7 @@
 
 namespace YaLlegaBack.Models
 {
-    public class UsersServiceResult
+    public class ServiceResult
     {
         [Required]
         public int StatusCode { get; set; }

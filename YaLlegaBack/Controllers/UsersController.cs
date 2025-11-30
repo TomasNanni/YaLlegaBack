@@ -87,14 +87,14 @@ namespace YaLlegaBack.Controllers
         [HttpPut("Update")]
         public IActionResult UpdateUser(UpdatedUserDto updatedUser ,int userToUpdateId)
         {
-            UsersServiceResult result = _userService.Update(updatedUser, userToUpdateId);
+            ServiceResult result = _userService.Update(updatedUser, userToUpdateId);
             return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpDelete("Delete{userId}")]
         public IActionResult Delete(int userId)
         {
-            UsersServiceResult message = _userService.Delete(userId);
+            ServiceResult message = _userService.Delete(userId);
             return StatusCode(message.StatusCode, message.Message);
         }
     }
