@@ -188,5 +188,18 @@ namespace YaLlegaBack.Services
                 };
             }
         }
+
+        public User? Authenticate(string email, string password)
+        {
+            var user = _userRepository.GetByEmail(email);
+
+            if (user is null)
+                return null;
+
+            if (user.Password == password)
+                return user;
+
+            return null;
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace YaLlegaBack.Interfaces
         public UserDataDto? ValidateUser(AuthDto request);
         public ServiceResult Update(UpdatedUserDto updatedUser, int userId);
         public ServiceResult Delete(int userId);
+        User? Authenticate(string email, string password);
     }
 }

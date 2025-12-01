@@ -19,6 +19,6 @@ namespace YaLlega.Entities
         public int RestaurantId { get; set; }
         [ForeignKey("RestaurantId")]
         [Required]
-        public Restaurant Restaurant { get; set; }
+        public ICollection<Restaurant> Restaurants{ get; set; } = new List<Restaurant>();
     }
 }

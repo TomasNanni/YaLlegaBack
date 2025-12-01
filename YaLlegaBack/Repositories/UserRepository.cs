@@ -39,7 +39,7 @@ namespace YaLlega.Repositories
         }
         public User? GetByEmail(string userEmail)
         {
-            return _context.Users.FirstOrDefault(user => user.EmailAddress == userEmail);
+            return _context.Users.FirstOrDefault(user => user.EmailAddress.ToLower() == userEmail.ToLower());
         }
 
         public User? ValidateUser(AuthDto request)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using YaLlega.Models;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
@@ -18,6 +19,7 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpGet("GetAll")]
+        [Authorize]
         public ActionResult<UserDataDto> GetAll()
         {
             IEnumerable<UserDataDto> users = _userService.GetAll();
@@ -85,13 +87,16 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpPut("Update")]
-        public IActionResult UpdateUser(UpdatedUserDto updatedUser ,int userToUpdateId)
+        [Authorize]
+        public IActionResult UpdateUser(UpdatedUserDto updatedUser)
         {
+            int userToUpdateId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
             ServiceResult result = _userService.Update(updatedUser, userToUpdateId);
             return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpDelete("Delete{userId}")]
+        [Authorize]
         public IActionResult Delete(int userId)
         {
             ServiceResult message = _userService.Delete(userId);
