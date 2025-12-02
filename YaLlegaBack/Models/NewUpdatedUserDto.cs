@@ -5,7 +5,7 @@ using YaLlega.Entities;
 
 namespace YaLlega.Models
 {
-    public class NewUserDataDTO
+    public class NewUpdatedUserDto
     {
         [Required]
         [StringLength(20)]

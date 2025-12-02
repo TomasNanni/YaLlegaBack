@@ -16,7 +16,7 @@ namespace YaLlega.Interfaces
         public bool CheckIfUserExists(int userId);
 
         public List<User> GetAll();
-
+        public Restaurant? GetRestaurant(int userId);
         public User? GetById(int userId);
         public User? GetByEmail(string userEmail);
         public User? ValidateUser(AuthDto request);

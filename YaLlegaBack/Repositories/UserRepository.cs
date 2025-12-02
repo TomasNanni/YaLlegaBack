@@ -61,5 +61,10 @@ namespace YaLlega.Repositories
             _context.Users.Remove(_context.Users.Single(user => user.Id == userId));
             _context.SaveChanges();
         }
+
+        public Restaurant? GetRestaurant(int userId)
+        {
+            return _context.Restaurants.FirstOrDefault(r => r.UserId == userId);
+        }
     }
 }

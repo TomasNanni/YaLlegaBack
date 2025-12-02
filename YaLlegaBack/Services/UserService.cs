@@ -29,11 +29,15 @@ namespace YaLlegaBack.Services
             return _userRepository.CheckIfUserExists(userId);
         }
 
-        public int? Create(NewUserDataDTO newUser)
+        public ServiceResult Create(NewUpdatedUserDto newUser, NewUpdatedRestaurantDTO newRestaurantData)
         {
             if (_userRepository.GetByEmail(newUser.EmailAddress) != null)
             {
-                return null;
+                return new ServiceResult
+                {
+                    Message = "Ya existe usuario con la dirección de correo ingresada.",
+                    StatusCode = 400
+                };
             }
             var user = new User()
             {
@@ -41,10 +45,29 @@ namespace YaLlegaBack.Services
                 LastName = newUser.LastName,
                 EmailAddress = newUser.EmailAddress,
                 Password = newUser.Password,
-                //Restaurant = newUser.Restaurant,
             };
             var newUserId = _userRepository.Create(user);
-            return newUserId;
+            var newRestaurantId = _restaurantService.Create(newRestaurantData);
+            if (newRestaurantId == null)
+            {
+                _userRepository.Delete(newUserId);
+                return new ServiceResult
+                {
+                    Message = "Datos de restaurante invalidos.",
+                    StatusCode = 400
+                };
+            }
+            else
+            {
+                Restaurant? restaurant = _userRepository.GetRestaurant(newUserId);
+                user.Restaurant = restaurant;
+                _userRepository.Update(user, newUserId);
+                return new ServiceResult
+                {
+                    Message = "Usuario y Restaurante creados exitosamente",
+                    StatusCode = 201
+                };
+            }
         }
 
         public ServiceResult Delete(int userId)
@@ -118,7 +141,7 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public ServiceResult Update(UpdatedUserDto updatedUser, int userId)
+        public ServiceResult Update(NewUpdatedUserDto updatedUser, int userId)
         {
             if (CheckIfUserExists(userId) == false)
             {
