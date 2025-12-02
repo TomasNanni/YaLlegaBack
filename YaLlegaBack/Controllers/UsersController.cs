@@ -95,10 +95,11 @@ namespace YaLlegaBack.Controllers
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpDelete("Delete{userId}")]
+        [HttpDelete("Delete")]
         [Authorize]
-        public IActionResult Delete(int userId)
+        public IActionResult Delete()
         {
+            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
             ServiceResult message = _userService.Delete(userId);
             return StatusCode(message.StatusCode, message.Message);
         }
