@@ -29,15 +29,11 @@ namespace YaLlegaBack.Services
             return _userRepository.CheckIfUserExists(userId);
         }
 
-        public ServiceResult Create(NewUpdatedUserDto newUser, NewUpdatedRestaurantDTO newRestaurantData)
+        public int? Create(NewUpdatedUserDto newUser, NewUpdatedRestaurantDTO newRestaurantData)
         {
             if (_userRepository.GetByEmail(newUser.EmailAddress) != null)
             {
-                return new ServiceResult
-                {
-                    Message = "Ya existe usuario con la dirección de correo ingresada.",
-                    StatusCode = 400
-                };
+                return null;
             }
             var user = new User()
             {
@@ -51,22 +47,14 @@ namespace YaLlegaBack.Services
             if (newRestaurantId == null)
             {
                 _userRepository.Delete(newUserId);
-                return new ServiceResult
-                {
-                    Message = "Datos de restaurante invalidos.",
-                    StatusCode = 400
-                };
+                return null;
             }
             else
             {
                 Restaurant? restaurant = _userRepository.GetRestaurant(newUserId);
                 user.Restaurant = restaurant;
                 _userRepository.Update(user, newUserId);
-                return new ServiceResult
-                {
-                    Message = "Usuario y Restaurante creados exitosamente",
-                    StatusCode = 201
-                };
+                return newUserId;
             }
         }
 
@@ -74,12 +62,26 @@ namespace YaLlegaBack.Services
         {
             if (CheckIfUserExists(userId))
             {
-                _userRepository.Delete(userId);
-                return new ServiceResult
+                //Borra user y restaurante en cascada
+                var restaurant = GetRestaurant(userId);
+                ServiceResult result = _restaurantService.Delete(restaurant.Id);
+                if (result.StatusCode == 200)
                 {
-                    Message = "Usuario y restaurante borrados correctamente.",
-                    StatusCode = 200,
-                };
+                    _userRepository.Delete(userId);
+                    return new ServiceResult
+                    {
+                        Message = "Usuario y restaurante borrados correctamente.",
+                        StatusCode = 200,
+                    };
+                }
+                else
+                {
+                    return new ServiceResult
+                    {
+                        Message = "Usuario borrado correctamente, restaurante no.",
+                        StatusCode = 200,
+                    };
+                }
             }
             else
             {
@@ -151,7 +153,7 @@ namespace YaLlegaBack.Services
                     StatusCode = 400,
                 };
             }
-            if (string.IsNullOrWhiteSpace(updatedUser.EmailAdress) || IsValidEmail(updatedUser.EmailAdress) == false) 
+            if (string.IsNullOrWhiteSpace(updatedUser.EmailAddress) || IsValidEmail(updatedUser.EmailAddress) == false) 
             {
                 return new ServiceResult
                 {
@@ -159,7 +161,7 @@ namespace YaLlegaBack.Services
                     StatusCode = 400,
                 };
             }
-            if (GetByEmail(updatedUser.EmailAdress) != null)
+            if (GetByEmail(updatedUser.EmailAddress) != null)
             {
                 return new ServiceResult
                 {
@@ -171,7 +173,7 @@ namespace YaLlegaBack.Services
             {
                 FirstName = updatedUser.FirstName,
                 LastName = updatedUser.LastName,
-                EmailAddress = updatedUser.EmailAdress,
+                EmailAddress = updatedUser.EmailAddress,
             };
             _userRepository.Update(user, userId);
             return new ServiceResult
@@ -223,6 +225,10 @@ namespace YaLlegaBack.Services
                 return user;
 
             return null;
+        }
+        public Restaurant? GetRestaurant(int userId)
+        {
+            return _userRepository.GetRestaurant(userId);
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using YaLlega.Entities;
 
 namespace YaLlegaBack.Models
 {
-    public class NewUpdatedRestaurantDTO
+    public class GetRestaurantByIdDto
     {
+        [Required]
+        public int Id { get; set; }
         [Required]
         [StringLength(20, MinimumLength = 1)]
         public string Name { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using YaLlega.Entities;
 using YaLlega.Models;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
@@ -72,23 +73,30 @@ namespace YaLlegaBack.Controllers
  
         [HttpPost("Create")]
         [AllowAnonymous]
-        public IActionResult CreateUser([FromBody] NewUserDataDTO dto)
+        public IActionResult CreateUser([FromBody] CreateUserRequest dto)
         {
-            int? newUserId = _userService.Create(dto);
+            int? newUserId = _userService.Create(dto.User , dto.Restaurant);
             if (newUserId == null)
             {
                 return BadRequest("Ya existe un usuario con esos datos.");
             }
             else
             {
-                var user = GetOneById((int)newUserId);
-                return Created("Usuario creado con los datos: ",user);
+                GetUserByIdDto userDto = _userService.GetById((int)newUserId);
+                Restaurant restaurant = _userService.GetRestaurant((int)newUserId);
+                var response = new
+                {
+                    Mensaje = "Usuario y restaurante creados correctamente.",
+                    Usuario = userDto,
+                    Restaurante = restaurant
+                };
+                return Created("Usuario Creado: ",response);
             }
         }
 
         [HttpPut("Update")]
         [Authorize]
-        public IActionResult UpdateUser(UpdatedUserDto updatedUser)
+        public IActionResult UpdateUser(NewUpdatedUserDto updatedUser)
         {
             int userToUpdateId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
             ServiceResult result = _userService.Update(updatedUser, userToUpdateId);

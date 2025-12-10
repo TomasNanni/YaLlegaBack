@@ -42,6 +42,11 @@ namespace YaLlegaBack.Repositories
             return _context.Restaurants.FirstOrDefault(restaurant => restaurant.Id == restaurantId);
         }
 
+        public bool CheckIfRestaurantNameExists (string name)
+        {
+            return _context.Restaurants.Any(restaurant => restaurant.Name == name);
+        }
+
         public void Update(Restaurant updatedRestaurant, int restaurantId)
         {
             var restaurantToEdit = _context.Restaurants.First(u => u.Id == restaurantId);
