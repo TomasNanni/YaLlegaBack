@@ -51,5 +51,13 @@ namespace YaLlegaBack.Controllers
 
             return Ok(restaurant);
         }
+
+        [HttpPut("Update")]
+        [Authorize]
+        public IActionResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int restaurantId)
+        {
+            ServiceResult result = _restaurantService.Update(updatedRestaurant, restaurantId);
+            return StatusCode(result.StatusCode, result.Message);
+        }
     }
 }

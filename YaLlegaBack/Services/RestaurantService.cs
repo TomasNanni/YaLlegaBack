@@ -107,7 +107,7 @@ namespace YaLlegaBack.Services
 
         public ServiceResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int restaurantId)
         {
-            if (CheckIfRestaurantNameExists(updatedRestaurant.Name))
+            if (CheckIfRestaurantNameExists(updatedRestaurant.Name) == false)
             {
                 var restaurant = new Restaurant
                 {
