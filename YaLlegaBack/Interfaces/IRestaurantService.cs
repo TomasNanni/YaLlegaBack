@@ -11,6 +11,6 @@ namespace YaLlegaBack.Interfaces
         public GetRestaurantByIdDto? GetById(int restaurantId);
         public ServiceResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int restaurantId);
         public ServiceResult Delete(int restaurantId);
-        public int? Create(NewUpdatedRestaurantDTO newRestaurant);
+        public int? Create(NewUpdatedRestaurantDTO newRestaurant, int? userId);
     }
 }

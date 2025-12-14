@@ -42,18 +42,18 @@ namespace YaLlegaBack.Services
                 EmailAddress = newUser.EmailAddress,
                 Password = newUser.Password,
             };
-            var newUserId = _userRepository.Create(user);
-            var newRestaurantId = _restaurantService.Create(newRestaurantData);
+            int? newUserId = _userRepository.Create(user);
+            var newRestaurantId = _restaurantService.Create(newRestaurantData, newUserId);
             if (newRestaurantId == null)
             {
-                _userRepository.Delete(newUserId);
+                _userRepository.Delete((int)newUserId);
                 return null;
             }
             else
             {
-                Restaurant? restaurant = _userRepository.GetRestaurant(newUserId);
+                Restaurant? restaurant = _userRepository.GetRestaurant((int)newUserId);
                 user.Restaurant = restaurant;
-                _userRepository.Update(user, newUserId);
+                _userRepository.Update(user, (int)newUserId);
                 return newUserId;
             }
         }

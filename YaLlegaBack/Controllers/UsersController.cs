@@ -35,9 +35,10 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpGet("GetOneByid/{id}")]
+        [Authorize]
         public IActionResult GetOneById(int id)
         {
-            if (id == 0)
+            if (id <= 0)
             {
                 return BadRequest("El ID ingresado debe ser distinto de 0");
             }

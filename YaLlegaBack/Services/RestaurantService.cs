@@ -10,7 +10,7 @@ namespace YaLlegaBack.Services
     public class RestaurantService : IRestaurantService
     {
 
-        private readonly IRestaurantRepository _restaurantRepository; 
+        private readonly IRestaurantRepository _restaurantRepository;
 
         public RestaurantService(IRestaurantRepository restaurantRepository)
         {
@@ -24,9 +24,9 @@ namespace YaLlegaBack.Services
         {
             return _restaurantRepository.CheckIfRestaurantNameExists(name);
         }
-        public int? Create(NewUpdatedRestaurantDTO newRestaurant)
+        public int? Create(NewUpdatedRestaurantDTO newRestaurant, int? userId)
         {
-            if (CheckIfRestaurantNameExists(newRestaurant.Name))
+            if (CheckIfRestaurantNameExists(newRestaurant.Name) == false)
             {
                 var restaurant = new Restaurant
                 {
@@ -37,6 +37,7 @@ namespace YaLlegaBack.Services
                     OpeningTime = newRestaurant.OpeningTime,
                     ClosingTime = newRestaurant.ClosingTime,
                     Contact = newRestaurant.Contact,
+                    UserId = (int)userId,
                 };
                 int newRestaurantId = _restaurantRepository.Create(restaurant);
                 return newRestaurantId;
@@ -83,7 +84,7 @@ namespace YaLlegaBack.Services
 
         public GetRestaurantByIdDto? GetById(int restaurantId)
         {
-            var restaurant= _restaurantRepository.GetById(restaurantId);
+            var restaurant = _restaurantRepository.GetById(restaurantId);
             if (restaurant != null)
             {
                 return new GetRestaurantByIdDto
@@ -130,5 +131,6 @@ namespace YaLlegaBack.Services
                 Message = "El nombre del restaurante ya existe.",
                 StatusCode = 400,
             };
+        }
     }
 }
