@@ -32,8 +32,6 @@ namespace YaLlega.Entities
         [ForeignKey("UserId")]
         [Required]
         public User User { get; set; }
-        public ICollection<Category> Categories{ get; set; } = new List<Category>();
-        public ICollection<Cart> Carts { get; set; } = new List<Cart>();
-        
+        public ICollection<Category> Categories{ get; set; } = new List<Category>();    
     }
 }
