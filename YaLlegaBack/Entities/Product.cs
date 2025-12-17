@@ -23,8 +23,8 @@ namespace YaLlega.Entities
         public int Discount { get; set; } = 0;
         [Required]
         public bool IsStandout = false;
-        public TimeOnly ?HappyHourStart { get; set; }
-        public TimeOnly ?HappyHourEnd { get; set; }
+        public TimeOnly? HappyHourStart { get; set; }
+        public TimeOnly? HappyHourEnd { get; set; }
         public ICollection<Category> Categories{ get; set; } = new List<Category>();
         public int? CartId { get; set; }
         [ForeignKey("CartId")]

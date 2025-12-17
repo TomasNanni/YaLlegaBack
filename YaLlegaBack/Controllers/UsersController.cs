@@ -74,7 +74,7 @@ namespace YaLlegaBack.Controllers
  
         [HttpPost("Create")]
         [AllowAnonymous]
-        public IActionResult CreateUser([FromBody] CreateUserRequest dto)
+        public IActionResult Create([FromBody] CreateUserRequest dto)
         {
             int? newUserId = _userService.Create(dto.User , dto.Restaurant);
             if (newUserId == null)

@@ -22,10 +22,10 @@ namespace YaLlegaBack.Repositories
             return;
         }
 
-        public void DeleteProduct(List<Product> productsToAdd, int cartId)
+        public void DeleteProduct(List<Product> productsToRemove, int cartId)
         {
             Cart cartToUpdate = _context.Carts.First(c => c.Id == cartId);
-            foreach (var product in productsToAdd)
+            foreach (var product in productsToRemove)
             {
                 _context.Products.Remove(product);
             }
