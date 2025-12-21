@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using YaLlega.Entities;
 using YaLlegaBack.Data;
 using YaLlegaBack.Interfaces;
@@ -30,6 +31,19 @@ namespace YaLlegaBack.Repositories
             _context.Restaurants.Remove(_context.Restaurants.Single(restaurant => restaurant.Id == restaurantId));
             _context.SaveChanges();
             return;
+        }
+
+        public List<Category>? GetCategory(int restaurantId)
+        {
+            var restaurants = _context.Restaurants.FirstOrDefault(restaurant => restaurant.Id == restaurantId);
+            if (restaurants == null)
+            {
+                return null;
+            }
+            else
+            {
+                return restaurants.Categories.ToList();
+            }
         }
 
         public List<Restaurant> GetAll()

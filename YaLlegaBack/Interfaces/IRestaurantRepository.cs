@@ -11,5 +11,6 @@ namespace YaLlegaBack.Interfaces
         public void Update(Restaurant updatedRestaurant, int restaurantId);
         public void Delete(int restaurantId);
         public int Create(Restaurant newRestaurant);
+        public List<Category>? GetCategory(int restaurantId);
     }
 }
