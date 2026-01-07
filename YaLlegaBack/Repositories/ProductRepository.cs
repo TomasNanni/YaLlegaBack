@@ -17,13 +17,25 @@ namespace YaLlegaBack.Repositories
             return _context.Products.Any(product => product.Id == productId);
         }
 
-        public bool CheckIfProductNameExists(string productName)
+        public bool CheckIfProductNameExists(string productName, List<Category> categories)
         {
-            return _context.Products.Any(product => product.Name == productName);
+            foreach (var category in categories)
+            {
+                foreach (var product in category.Products)
+                {
+                    if (product.Name == productName)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
-        public int Create(Product newProduct)
+        public int Create(Product newProduct, List<int> categoriesId)
         {
+            var categories = _context.Categories.Where(c => categoriesId.Contains(c.Id)).ToList();
+            newProduct.Categories = categories;
             var createdProduct = _context.Products.Add(newProduct).Entity;
             _context.SaveChanges();
             return createdProduct.Id;
@@ -44,8 +56,11 @@ namespace YaLlegaBack.Repositories
         {
             return _context.Products.FirstOrDefault(product => product.Id == productId);
         }
-
-        public List<Category>? GetCategories(int productId)
+        public List<Category> GetCategories()
+        {
+            return _context.Categories.ToList();
+        }
+        public List<Category>? GetCategoriesOfProduct(int productId)
         {
             return _context.Products.FirstOrDefault(product => product.Id == productId).Categories.ToList();
         }
@@ -67,6 +82,11 @@ namespace YaLlegaBack.Repositories
             productToEdit.HappyHourEnd = updatedProduct.HappyHourEnd;
             _context.SaveChanges();
             return;
+        }
+
+        public List<int> GetCategoryId(int productId)
+        {
+            return _context.Products.Where(p => p.Id == productId).SelectMany(p => p.Categories).Select(c => c.Id).ToList();
         }
     }
 }

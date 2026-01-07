@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace YaLlegaBack.Models
 {
@@ -17,5 +18,6 @@ namespace YaLlegaBack.Models
         public bool IsStandout = false;
         public TimeOnly? HappyHourStart { get; set; }
         public TimeOnly? HappyHourEnd { get; set; }
+        public List<int> categoriesId { get; set; }
     }
 }
