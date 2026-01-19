@@ -17,11 +17,10 @@ namespace YaLlega.Entities
         [StringLength(20 , MinimumLength = 1)]
         public string Name { get; set; }
         public string Description { get; set; }
-        public int RestaurantId { get; set; }
-
-        [ForeignKey("RestaurantId")]
+        [Required]
+        public int RestaurantUserId { get; set; }
+        [ForeignKey("RestaurantUserId")]
         public Restaurant Restaurant { get; set; }
-
         public ICollection<Product> Products{ get; set; } = new List<Product>();
     }
 }

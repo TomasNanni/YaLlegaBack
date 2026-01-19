@@ -43,7 +43,7 @@ namespace YaLlegaBack.Services
             {
                 return new ServiceResult
                 {
-                    Message = "El producto no existe",
+                    Message = "El producto no existe.",
                     StatusCode = 404,
                 };
             }
@@ -106,10 +106,10 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public List<CartDataDto>? GetCart(int productId)
+        public List<GetCartByIdDto>? GetCart(int productId)
         {
             List<Cart>? carts = _productRepository.GetCart(productId);
-            return carts.Select(cart => new CartDataDto
+            return carts.Select(cart => new GetCartByIdDto
             {
                 Products = cart.Products.Select(product => new ProductDataDto
                 {
@@ -125,10 +125,10 @@ namespace YaLlegaBack.Services
             }).ToList();
         }
 
-        public List<CategoryDataDto>? GetCategories(int productId)
+        public List<GetCategoryById>? GetCategories(int productId)
         {
             List<Category>? categories = _productRepository.GetCategoriesOfProduct(productId);
-            return categories.Select(categories => new CategoryDataDto
+            return categories.Select(categories => new GetCategoryById
             {
                 Name = categories.Name,
                 Description = categories.Description,

@@ -14,28 +14,28 @@ namespace YaLlegaBack.Repositories
         {
             _context = context;
         }
-        public bool CheckIfRestaurantExists(int restaurantId)
+        public bool CheckIfRestaurantExists(int userId)
         {
-            return _context.Restaurants.Any(restaurant=> restaurant.Id == restaurantId);
+            return _context.Restaurants.Any(restaurant=> restaurant.UserId == userId);
         }
 
         public int Create(Restaurant newRestaurant)
         {
             var createdRestaurant = _context.Restaurants.Add(newRestaurant).Entity;
             _context.SaveChanges();
-            return createdRestaurant.Id;
+            return createdRestaurant.UserId;
         }
 
-        public void Delete(int restaurantId)
+        public void Delete(int userId)
         {
-            _context.Restaurants.Remove(_context.Restaurants.Single(restaurant => restaurant.Id == restaurantId));
+            _context.Restaurants.Remove(_context.Restaurants.Single(restaurant => restaurant.UserId == userId));
             _context.SaveChanges();
             return;
         }
 
-        public List<Category>? GetCategory(int restaurantId)
+        public List<Category>? GetCategory(int userId)
         {
-            var restaurants = _context.Restaurants.FirstOrDefault(restaurant => restaurant.Id == restaurantId);
+            var restaurants = _context.Restaurants.FirstOrDefault(restaurant => restaurant.UserId == userId);
             if (restaurants == null)
             {
                 return null;
@@ -51,9 +51,9 @@ namespace YaLlegaBack.Repositories
             return _context.Restaurants.ToList();
         }
 
-        public Restaurant? GetById(int restaurantId)
+        public Restaurant? GetById(int userId)
         {
-            return _context.Restaurants.FirstOrDefault(restaurant => restaurant.Id == restaurantId);
+            return _context.Restaurants.FirstOrDefault(restaurant => restaurant.UserId == userId);
         }
 
         public bool CheckIfRestaurantNameExists (string name)
@@ -61,9 +61,9 @@ namespace YaLlegaBack.Repositories
             return _context.Restaurants.Any(restaurant => restaurant.Name == name);
         }
 
-        public void Update(Restaurant updatedRestaurant, int restaurantId)
+        public void Update(Restaurant updatedRestaurant, int userId)
         {
-            var restaurantToEdit = _context.Restaurants.First(u => u.Id == restaurantId);
+            var restaurantToEdit = _context.Restaurants.First(u => u.UserId == userId);
             restaurantToEdit.Name = updatedRestaurant.Name;
             restaurantToEdit.UrlLogoImage = updatedRestaurant.UrlLogoImage;
             restaurantToEdit.UrlBannerImage = updatedRestaurant.UrlBannerImage;

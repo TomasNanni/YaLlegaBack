@@ -6,7 +6,6 @@ namespace YaLlegaBack.Models
     public class ProductDataDto
     {
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
@@ -16,9 +15,9 @@ namespace YaLlegaBack.Models
         [Required]
         public decimal BasePrice { get; set; }
         [Required]
-        public int Discount { get; set; } = 0;
+        public int Discount { get; set; }
         [Required]
-        public bool IsStandout = false;
+        public bool IsStandout { get; set; }
         public TimeOnly? HappyHourStart { get; set; }
         public TimeOnly? HappyHourEnd { get; set; }
     }

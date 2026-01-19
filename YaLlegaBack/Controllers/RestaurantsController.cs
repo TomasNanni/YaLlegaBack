@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using YaLlega.Entities;
 using YaLlega.Models;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
@@ -33,16 +34,17 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpGet("GetOneByid/{id}")]
+        [HttpGet("GetOneByid")]
         [Authorize]
-        public IActionResult GetOneById(int id)
+        public IActionResult GetOneById()
         {
-            if (id <= 0)
+            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+            if (userId <= 0)
             {
                 return BadRequest("El ID ingresado debe ser mayor a 0");
             }
 
-            GetRestaurantByIdDto? restaurant = _restaurantService.GetById(id);
+            GetRestaurantByIdDto? restaurant = _restaurantService.GetById(userId);
 
             if (restaurant is null)
             {
@@ -54,9 +56,10 @@ namespace YaLlegaBack.Controllers
 
         [HttpPut("Update")]
         [Authorize]
-        public IActionResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int restaurantId)
+        public IActionResult Update(NewUpdatedRestaurantDTO updatedRestaurant)
         {
-            ServiceResult result = _restaurantService.Update(updatedRestaurant, restaurantId);
+            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+            ServiceResult result = _restaurantService.Update(updatedRestaurant, userId);
             return StatusCode(result.StatusCode, result.Message);
         }
     }

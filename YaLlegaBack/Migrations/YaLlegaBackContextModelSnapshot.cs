@@ -73,12 +73,12 @@ namespace YaLlegaBack.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RestaurantId")
+                    b.Property<int>("RestaurantUserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RestaurantId");
+                    b.HasIndex("RestaurantUserId");
 
                     b.ToTable("Categories");
                 });
@@ -120,7 +120,7 @@ namespace YaLlegaBack.Migrations
 
             modelBuilder.Entity("YaLlega.Entities.Restaurant", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -151,13 +151,7 @@ namespace YaLlegaBack.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasKey("UserId");
 
                     b.ToTable("Restaurants");
                 });
@@ -229,7 +223,7 @@ namespace YaLlegaBack.Migrations
                 {
                     b.HasOne("YaLlega.Entities.Restaurant", "Restaurant")
                         .WithMany("Categories")
-                        .HasForeignKey("RestaurantId")
+                        .HasForeignKey("RestaurantUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -8,6 +8,6 @@ namespace YaLlegaBack.Interfaces
         public void AddProduct(List<Product> productsToAdd, int cartId);
         public void DeleteProduct(List<Product> productsToRemove, int cartId);
         public void Delete(int cartId);
-        public int Create(List<Product> products);
+        public int Create(List<int> products);
     }
 }

@@ -64,7 +64,7 @@ namespace YaLlegaBack.Services
             {
                 //Borra user y restaurante en cascada
                 var restaurant = GetRestaurant(userId);
-                ServiceResult result = _restaurantService.Delete(restaurant.Id);
+                ServiceResult result = _restaurantService.Delete(restaurant.UserId);
                 if (result.StatusCode == 200)
                 {
                     _userRepository.Delete(userId);

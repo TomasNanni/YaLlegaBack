@@ -1,5 +1,6 @@
 ﻿using YaLlega.Entities;
 using YaLlegaBack.Models;
+using YaLlegaBack.Services;
 
 namespace YaLlegaBack.Interfaces
 {
@@ -8,8 +9,8 @@ namespace YaLlegaBack.Interfaces
         public bool CheckIfRestaurantExists(int restaurantId);
         public bool CheckIfRestaurantNameExists(string name);
         public IEnumerable<RestaurantDataDto> GetAll();
-        public GetRestaurantByIdDto? GetById(int restaurantId);
-        public ServiceResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int restaurantId);
+        public GetRestaurantByIdDto? GetById(int userId);
+        public ServiceResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int userId);
         public ServiceResult Delete(int restaurantId);
         public int? Create(NewUpdatedRestaurantDTO newRestaurant, int? userId);
     }

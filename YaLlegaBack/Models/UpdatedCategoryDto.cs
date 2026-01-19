@@ -1,0 +1,12 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace YaLlegaBack.Models
+{
+    public class UpdatedCategoryDto
+    {
+        [Required]
+        [StringLength(20, MinimumLength = 1)]
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+}

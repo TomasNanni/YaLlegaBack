@@ -4,15 +4,13 @@ using YaLlega.Entities;
 
 namespace YaLlegaBack.Models
 {
-    public class CategoryDataDto
+    public class NewCategoryDto
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         [Required]
         [StringLength(20, MinimumLength = 1)]
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<ProductDataDto> Products { get; set; } = new List<ProductDataDto>();
+        public int RestaurantUserId { get; set; }
+        public List<int> productsId { get; set; }
     }
 }

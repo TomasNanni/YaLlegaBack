@@ -71,7 +71,6 @@ namespace YaLlegaBack.Services
             return _restaurantRepository.GetAll().Select(restaurant =>
             new RestaurantDataDto
             {
-                Id = restaurant.Id,
                 Name = restaurant.Name,
                 UrlLogoImage = restaurant.UrlLogoImage,
                 UrlBannerImage = restaurant.UrlBannerImage,
@@ -89,7 +88,6 @@ namespace YaLlegaBack.Services
             {
                 return new GetRestaurantByIdDto
                 {
-                    Id = restaurant.Id,
                     Name = restaurant.Name,
                     UrlLogoImage = restaurant.UrlLogoImage,
                     UrlBannerImage = restaurant.UrlBannerImage,

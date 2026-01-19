@@ -11,14 +11,29 @@ using YaLlegaBack.Data;
 namespace YaLlegaBack.Migrations
 {
     [DbContext(typeof(YaLlegaBackContext))]
-    [Migration("20251122201426_userRestaurantCascada")]
-    partial class userRestaurantCascada
+    [Migration("20260119002154_inicial")]
+    partial class inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
+
+            modelBuilder.Entity("CartProduct", b =>
+                {
+                    b.Property<int>("CartsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CartsId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("CartProduct");
+                });
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
@@ -41,12 +56,7 @@ namespace YaLlegaBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RestaurantId");
 
                     b.ToTable("Carts");
                 });
@@ -66,12 +76,12 @@ namespace YaLlegaBack.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RestaurantId")
+                    b.Property<int>("RestaurantUserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RestaurantId");
+                    b.HasIndex("RestaurantUserId");
 
                     b.ToTable("Categories");
                 });
@@ -84,9 +94,6 @@ namespace YaLlegaBack.Migrations
 
                     b.Property<decimal>("BasePrice")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("CartId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -111,14 +118,12 @@ namespace YaLlegaBack.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
-
                     b.ToTable("Products");
                 });
 
             modelBuilder.Entity("YaLlega.Entities.Restaurant", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -149,13 +154,7 @@ namespace YaLlegaBack.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasKey("UserId");
 
                     b.ToTable("Restaurants");
                 });
@@ -193,6 +192,21 @@ namespace YaLlegaBack.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("CartProduct", b =>
+                {
+                    b.HasOne("YaLlega.Entities.Cart", null)
+                        .WithMany()
+                        .HasForeignKey("CartsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YaLlega.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CategoryProduct", b =>
                 {
                     b.HasOne("YaLlega.Entities.Category", null)
@@ -208,35 +222,15 @@ namespace YaLlegaBack.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("YaLlega.Entities.Cart", b =>
-                {
-                    b.HasOne("YaLlega.Entities.Restaurant", "Restaurant")
-                        .WithMany("Carts")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Restaurant");
-                });
-
             modelBuilder.Entity("YaLlega.Entities.Category", b =>
                 {
                     b.HasOne("YaLlega.Entities.Restaurant", "Restaurant")
                         .WithMany("Categories")
-                        .HasForeignKey("RestaurantId")
+                        .HasForeignKey("RestaurantUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("YaLlega.Entities.Product", b =>
-                {
-                    b.HasOne("YaLlega.Entities.Cart", "Cart")
-                        .WithMany("Products")
-                        .HasForeignKey("CartId");
-
-                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("YaLlega.Entities.Restaurant", b =>
@@ -250,15 +244,8 @@ namespace YaLlegaBack.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("YaLlega.Entities.Cart", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("YaLlega.Entities.Restaurant", b =>
                 {
-                    b.Navigation("Carts");
-
                     b.Navigation("Categories");
                 });
 

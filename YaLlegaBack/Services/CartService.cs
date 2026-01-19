@@ -12,9 +12,9 @@ namespace YaLlegaBack.Services
         {
             _cartRepository = cartRepository;
         }
-        public ServiceResult AddProduct(List<NewUpdatedProductDto> productsToAdd, int cartId)
+        public ServiceResult AddProduct(List<ProductDataDto> productsToAdd, int cartId)
         {
-            var products = new List<Product>();
+            List<Product> products = new();
             foreach (var productData in productsToAdd)
             {
                 Product product = new Product
@@ -31,33 +31,16 @@ namespace YaLlegaBack.Services
                 products.Add(product);
             }
             _cartRepository.AddProduct(products, cartId);
-            var result = new ServiceResult
+            return new ServiceResult
             {
                 Message = "Productos agregados correctamente.",
                 StatusCode = 200
             };
-            return result;
         }
 
-        public int? Create(List<NewUpdatedProductDto> productsToAdd)
+        public int? Create(List<int> productsId)
         {
-            var products = new List<Product>();
-            foreach (var productData in productsToAdd)
-            {
-                Product product = new Product
-                {
-                    Name = productData.Name,
-                    Description = productData.Description,
-                    UrlImage = productData.UrlImage,
-                    BasePrice = productData.BasePrice,
-                    Discount = productData.Discount,
-                    IsStandout = productData.IsStandout,
-                    HappyHourStart = productData.HappyHourStart,
-                    HappyHourEnd = productData.HappyHourEnd,
-                };
-                products.Add(product);
-            }
-            return _cartRepository.Create(products);
+            return _cartRepository.Create(productsId);
         }
 
         public ServiceResult Delete(int cartId)
@@ -71,7 +54,7 @@ namespace YaLlegaBack.Services
             return result;
         }
 
-        public ServiceResult DeleteProduct(List<NewUpdatedProductDto> productsToRemove, int cartId)
+        public ServiceResult DeleteProduct(List<ProductDataDto> productsToRemove, int cartId)
         {
             var products = new List<Product>();
             foreach (var productData in productsToRemove)
@@ -105,26 +88,22 @@ namespace YaLlegaBack.Services
             {
                 return null;
             }
-            GetCartByIdDto cartForController = new GetCartByIdDto
+            GetCartByIdDto cartForController = new()
             {
                Id = cart.Id,
             };
-            foreach (var product in cart.Products)
-            {
-                var productData = new ProductDataDto
-                {
-                  Id = product.Id,
-                  Name = product.Name,
-                  Description = product.Description,
-                  UrlImage = product.UrlImage,
-                  BasePrice = product.BasePrice,
-                  Discount = product.Discount,
-                  IsStandout = product.IsStandout,
-                  HappyHourStart = product.HappyHourStart,
-                  HappyHourEnd = product.HappyHourEnd,
-                };
-                cartForController.Products.Add(productData);
-            }
+            cartForController.Products = cart.Products.Select(product => new ProductDataDto 
+            { 
+                Id = product.Id,
+                Name = product.Name, 
+                Description = product.Description, 
+                UrlImage = product.UrlImage, 
+                BasePrice = product.BasePrice, 
+                Discount = product.Discount, 
+                IsStandout = product.IsStandout, 
+                HappyHourStart = product.HappyHourStart, 
+                HappyHourEnd = product.HappyHourEnd, 
+            }).ToList();
             return cartForController;
         }
     }

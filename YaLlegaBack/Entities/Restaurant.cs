@@ -13,7 +13,7 @@ namespace YaLlega.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int UserId { get; set; }
         [Required]
         [StringLength(20, MinimumLength = 1)]
         public string Name { get; set; }
@@ -28,7 +28,6 @@ namespace YaLlega.Entities
         public TimeOnly ClosingTime { get; set; }
         [Required]
         public string Contact { get; set; }
-        public int UserId { get; set; }
         [ForeignKey("UserId")]
         [Required]
         public User User { get; set; }

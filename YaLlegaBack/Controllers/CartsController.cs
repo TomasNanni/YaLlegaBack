@@ -7,12 +7,12 @@ using YaLlegaBack.Services;
 
 namespace YaLlegaBack.Controllers
 {
-    [Route("api/carts")]
+    [Route("api/Carts")]
     [ApiController]
     public class CartsController : ControllerBase
     {
         private readonly ICartService _cartService;
-        CartsController(ICartService cartService)
+        public CartsController(ICartService cartService)
         {
             _cartService = cartService;
         }
@@ -32,18 +32,18 @@ namespace YaLlegaBack.Controllers
                 return NotFound();
             }
 
-            return Ok(cart);
+            return Ok(cart.Products);
         }
 
         [HttpPost("Create")]
         [Authorize]
-        public IActionResult Create([FromBody] List<NewUpdatedProductDto> dto)
+        public IActionResult Create([FromBody] List<int> productsId)
         {
-            if (dto == null)
+            if (productsId == null)
             {
                 return BadRequest("Debe introducir minimo un producto para agregar");
             }
-            var result = _cartService.Create(dto);
+            var result = _cartService.Create(productsId);
             if (result == null)
             {
                 return BadRequest();
@@ -57,7 +57,7 @@ namespace YaLlegaBack.Controllers
 
         [HttpPatch("AddProducts/{cartId}")]
         [Authorize]
-        public IActionResult AddProduct([FromBody] List<NewUpdatedProductDto> products, int cartId)
+        public IActionResult AddProduct([FromBody] List<ProductDataDto> products, int cartId)
         {
             if (cartId <= 0)
             {
@@ -72,7 +72,7 @@ namespace YaLlegaBack.Controllers
         }
         [HttpPatch("DeleteProducts/{cartId}")]
         [Authorize]
-        public IActionResult DeleteProduct([FromBody] List<NewUpdatedProductDto> products, int cartId)
+        public IActionResult DeleteProduct([FromBody] List<ProductDataDto> products, int cartId)
         {
             if (cartId <= 0)
             {

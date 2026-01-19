@@ -1,4 +1,5 @@
-﻿using YaLlega.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using YaLlega.Entities;
 using YaLlegaBack.Data;
 using YaLlegaBack.Interfaces;
 
@@ -14,27 +15,26 @@ namespace YaLlegaBack.Repositories
         }
         public void AddProduct(List<Product> productsToAdd, int cartId)
         {
-            Cart cartToUpdate = _context.Carts.First(c => c.Id == cartId);
             foreach (var product in productsToAdd)
             {
-                _context.Products.Add(product);
+                _context.Carts.First(c => c.Id == cartId).Products.Add(product);
             }
             return;
         }
 
         public void DeleteProduct(List<Product> productsToRemove, int cartId)
         {
-            Cart cartToUpdate = _context.Carts.First(c => c.Id == cartId);
             foreach (var product in productsToRemove)
             {
-                _context.Products.Remove(product);
+                _context.Carts.First(c => c.Id == cartId).Products.Remove(product);
             }
             return;
         }
 
-        public int Create(List<Product> products)
+        public int Create(List<int> productsId)
         {
-            var newCart = new Cart
+            List<Product> products = productsId.Select(id => _context.Products.Find(id)).Where(product => product  != null).ToList();
+            Cart newCart = new()
             {
                 Products = products,
             };
@@ -52,7 +52,7 @@ namespace YaLlegaBack.Repositories
 
         public Cart? GetById(int cartId)
         {
-            return _context.Carts.FirstOrDefault(cart => cart.Id == cartId);
+            return _context.Carts.Include(cart => cart.Products).FirstOrDefault(cart => cart.Id == cartId);
         }
     }
 }
