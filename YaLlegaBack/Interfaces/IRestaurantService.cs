@@ -13,5 +13,6 @@ namespace YaLlegaBack.Interfaces
         public ServiceResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int userId);
         public ServiceResult Delete(int restaurantId);
         public int? Create(NewUpdatedRestaurantDTO newRestaurant, int? userId);
+        public bool? RestaurantIsOpen(int userId);
     }
 }

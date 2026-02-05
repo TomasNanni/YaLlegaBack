@@ -130,5 +130,9 @@ namespace YaLlegaBack.Services
                 StatusCode = 400,
             };
         }
+        public bool? RestaurantIsOpen (int userId)
+        {
+            return _restaurantRepository.RestaurantIsOpen(userId);
+        }
     }
 }

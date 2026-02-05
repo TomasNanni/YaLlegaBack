@@ -62,5 +62,18 @@ namespace YaLlegaBack.Controllers
             ServiceResult result = _restaurantService.Update(updatedRestaurant, userId);
             return StatusCode(result.StatusCode, result.Message);
         }
+        [HttpGet("IsOpen/{id}")]
+        public IActionResult IsOpen (int id)
+        {
+            var result = _restaurantService.RestaurantIsOpen(id) == null;
+            if (result)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
     }
 }
