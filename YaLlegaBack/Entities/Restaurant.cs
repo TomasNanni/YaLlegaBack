@@ -21,7 +21,7 @@ namespace YaLlega.Entities
         public string UrlLogoImage { get; set; }
         public string UrlBannerImage { get; set; }
         [Required]
-        public string OpenDays {get; set; }
+        public List<string> OpenDays {get; set; } = new List<string>();
         [Required]
         public TimeOnly OpeningTime { get; set; }
         [Required]

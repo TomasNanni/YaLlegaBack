@@ -13,7 +13,7 @@ namespace YaLlegaBack.Models
         public string UrlLogoImage { get; set; }
         public string UrlBannerImage { get; set; }
         [Required]
-        public string OpenDays { get; set; }
+        public List<string> OpenDays { get; set; }
         [Required]
         public TimeOnly OpeningTime { get; set; }
         [Required]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using YaLlega.Entities;
 using YaLlegaBack.Data;
@@ -17,6 +18,22 @@ namespace YaLlegaBack.Repositories
         public bool CheckIfRestaurantExists(int userId)
         {
             return _context.Restaurants.Any(restaurant=> restaurant.UserId == userId);
+        }
+        public bool? RestaurantIsOpen (int userId)
+        {
+            var restaurant = _context.Restaurants.FirstOrDefault(restaurant => restaurant.UserId == userId);
+
+            if (restaurant == null)
+            {
+                return null;
+            }
+            string today = DateTime.Now.DayOfWeek.ToString().ToLower();
+            if (!restaurant.OpenDays.Any(day => day.ToLower() == today))
+            {
+                return false;
+            }
+            var hour = TimeOnly.FromDateTime(DateTime.Now);
+            return hour >= restaurant.OpeningTime && hour <= restaurant.ClosingTime;
         }
 
         public int Create(Restaurant newRestaurant)
