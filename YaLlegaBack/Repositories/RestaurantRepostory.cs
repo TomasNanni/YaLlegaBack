@@ -37,6 +37,10 @@ namespace YaLlegaBack.Repositories
             {
                 return true;
             }
+            else
+            {
+                return false;
+            }
         }
 
         public int Create(Restaurant newRestaurant)
