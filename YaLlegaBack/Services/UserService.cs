@@ -216,6 +216,8 @@ namespace YaLlegaBack.Services
 
         public User? Authenticate(string email, string password)
         {
+            email = email.Trim().ToLower();
+
             var user = _userRepository.GetByEmail(email);
 
             if (user is null)
