@@ -33,7 +33,10 @@ namespace YaLlegaBack.Repositories
                 return false;
             }
             var hour = TimeOnly.FromDateTime(DateTime.Now);
-            return hour >= restaurant.OpeningTime && hour <= restaurant.ClosingTime;
+            if (hour >= restaurant.OpeningTime && hour <= restaurant.ClosingTime)
+            {
+                return true;
+            }
         }
 
         public int Create(Restaurant newRestaurant)
