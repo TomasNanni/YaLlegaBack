@@ -66,14 +66,11 @@ namespace YaLlegaBack.Controllers
         public IActionResult IsOpen (int id)
         {
             var result = _restaurantService.RestaurantIsOpen(id) == null;
-            if (result)
+            if (result == null)
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok(result);
-            }
+            return Ok(result);
         }
     }
 }
