@@ -84,7 +84,7 @@ namespace YaLlegaBack.Controllers
             else
             {
                 GetUserByIdDto userDto = _userService.GetById((int)newUserId);
-                Restaurant restaurant = _userService.GetRestaurant((int)newUserId);
+                GetRestaurantByIdDto restaurant = _userService.GetRestaurantDto((int)newUserId);
                 var response = new
                 {
                     Mensaje = "Usuario y restaurante creados correctamente.",

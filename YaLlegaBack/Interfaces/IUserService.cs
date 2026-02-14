@@ -17,5 +17,6 @@ namespace YaLlegaBack.Interfaces
         public ServiceResult Delete(int userId);
         public User? Authenticate(string email, string password);
         public Restaurant? GetRestaurant(int userId);
+        public GetRestaurantByIdDto? GetRestaurantDto(int userId);
     }
 }

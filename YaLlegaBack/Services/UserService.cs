@@ -16,7 +16,7 @@ namespace YaLlegaBack.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        
+
         private readonly IRestaurantService _restaurantService;
 
         public UserService(IUserRepository userRepository, IRestaurantService restaurantService)
@@ -153,7 +153,7 @@ namespace YaLlegaBack.Services
                     StatusCode = 400,
                 };
             }
-            if (string.IsNullOrWhiteSpace(updatedUser.EmailAddress) || IsValidEmail(updatedUser.EmailAddress) == false) 
+            if (string.IsNullOrWhiteSpace(updatedUser.EmailAddress) || IsValidEmail(updatedUser.EmailAddress) == false)
             {
                 return new ServiceResult
                 {
@@ -231,6 +231,20 @@ namespace YaLlegaBack.Services
         public Restaurant? GetRestaurant(int userId)
         {
             return _userRepository.GetRestaurant(userId);
+        }
+        public GetRestaurantByIdDto? GetRestaurantDto(int userId)
+        {
+            Restaurant restaurant = _userRepository.GetRestaurant(userId);
+            return new GetRestaurantByIdDto
+            {
+                Name = restaurant.Name,
+                Contact = restaurant.Contact,
+                ClosingTime = restaurant.ClosingTime,
+                OpeningTime = restaurant.OpeningTime,
+                OpenDays = restaurant.OpenDays,
+                UrlBannerImage = restaurant.UrlBannerImage,
+                UrlLogoImage = restaurant.UrlLogoImage,
+            };
         }
     }
 }
