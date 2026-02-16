@@ -21,9 +21,9 @@ namespace YaLlegaBack.Controllers
 
         [HttpGet("GetAll")]
         [Authorize]
-        public ActionResult<RestaurantDataDto> GetAll()
+        public ActionResult<GetRestaurantByIdDto> GetAll()
         {
-            IEnumerable<RestaurantDataDto> restaurants = _restaurantService.GetAll();
+            IEnumerable<GetRestaurantByIdDto> restaurants = _restaurantService.GetAll();
             if (restaurants?.Any() != true)
             {
                 return NoContent();

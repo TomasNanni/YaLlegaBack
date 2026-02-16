@@ -66,11 +66,12 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public IEnumerable<RestaurantDataDto> GetAll()
+        public IEnumerable<GetRestaurantByIdDto> GetAll()
         {
             return _restaurantRepository.GetAll().Select(restaurant =>
-            new RestaurantDataDto
+            new GetRestaurantByIdDto
             {
+                Id = restaurant.UserId,
                 Name = restaurant.Name,
                 UrlLogoImage = restaurant.UrlLogoImage,
                 UrlBannerImage = restaurant.UrlBannerImage,
