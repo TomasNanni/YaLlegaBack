@@ -15,7 +15,7 @@ namespace YaLlega.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         [Required]
-        [StringLength(20, MinimumLength = 1)]
+        [StringLength(30, MinimumLength = 1)]
         public string Name { get; set; }
         [Required]
         public string UrlLogoImage { get; set; }

@@ -16,20 +16,5 @@ namespace YaLlegaBack.Models
         [StringLength(30)]
         [Required]
         public string EmailAddress { get; set; }
-
-        [Required]
-        [StringLength(20, MinimumLength = 1)]
-        public string RestaurantName { get; set; }
-        [Required]
-        public string UrlLogoImage { get; set; }
-        public string UrlBannerImage { get; set; }
-        [Required]
-        public string OpenDays { get; set; }
-        [Required]
-        public TimeOnly OpeningTime { get; set; }
-        [Required]
-        public TimeOnly ClosingTime { get; set; }
-        [Required]
-        public string Contact { get; set; }
     }
 }

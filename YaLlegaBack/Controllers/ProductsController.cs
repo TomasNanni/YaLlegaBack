@@ -53,7 +53,7 @@ namespace YaLlegaBack.Controllers
             return Ok(product);
         }
         [HttpPost("Create")]
-        [AllowAnonymous]
+        [Authorize]
         public IActionResult Create([FromBody] NewUpdatedProductDto dto)
         {
             var productId = _productService.Create(dto);
@@ -68,7 +68,7 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpPut("Update")]
+        [HttpPut("Update/{productId}")]
         [Authorize]
         public IActionResult Update(NewUpdatedProductDto updatedProduct, int productId)
         {

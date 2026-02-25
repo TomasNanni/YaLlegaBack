@@ -14,5 +14,6 @@ namespace YaLlegaBack.Interfaces
         public void AddProduct(List<int> productsToAddId, int categoryId);
         public bool CheckIfProductBelongs(int productId, int categoryId);
         public bool CheckIfCategoryNameExists(string categoryName);
+        public List<Category>? GetRestaurantCategories(int restaurantId);
     }
 }

@@ -7,7 +7,6 @@ namespace YaLlegaBack.Models
     {
         [Required]
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         [StringLength(20, MinimumLength = 1)]

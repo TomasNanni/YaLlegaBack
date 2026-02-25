@@ -13,7 +13,7 @@ namespace YaLlegaBack.Services
         {
             _categoryRepository = categoryRepository;
         }
-        public int? Create (NewCategoryDto dto, List<int> productsId)
+        public int? Create(NewCategoryDto dto, List<int> productsId)
         {
             if (_categoryRepository.CheckIfCategoryNameExists(dto.Name) == true)
             {
@@ -42,14 +42,14 @@ namespace YaLlegaBack.Services
                     };
                 }
             }
-            _categoryRepository.DeleteProduct(productId , categoryId);
+            _categoryRepository.DeleteProduct(productId, categoryId);
             return new ServiceResult
             {
                 Message = "Producto/s borrado/s de categoria correctamente.",
                 StatusCode = 204,
             };
         }
-        public ServiceResult AddProduct (int categoryId, List<int> productId)
+        public ServiceResult AddProduct(int categoryId, List<int> productId)
         {
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
@@ -77,18 +77,14 @@ namespace YaLlegaBack.Services
                 StatusCode = 204,
             };
         }
-        public ServiceResult GetById(int categoryId)
+        public GetCategoryById? GetById(int categoryId)
         {
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "No se encontro categoria con el id proporcionado.",
-                    StatusCode = 404,
-                };
+                return null;
             }
             Category? category = _categoryRepository.GetById(categoryId);
-            GetCategoryById categoryToReturn = new ()
+            GetCategoryById categoryToReturn = new()
             {
                 Description = category.Description,
                 Name = category.Name,
@@ -104,13 +100,9 @@ namespace YaLlegaBack.Services
                     UrlImage = product.UrlImage,
                 }).ToList(),
             };
-            return new ServiceResult
-            {
-                Message = $"La categoria tiene los datos: {categoryToReturn}",
-                StatusCode = 200,
-            };
+            return categoryToReturn;
         }
-        public ServiceResult Delete (int categoryId)
+        public ServiceResult Delete(int categoryId)
         {
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
@@ -127,22 +119,60 @@ namespace YaLlegaBack.Services
                 StatusCode = 201,
             };
         }
-        public ServiceResult Update (UpdatedCategoryDto dto, int categoryId)
+        public GetCategoryById? Update(UpdatedCategoryDto dto, int categoryId)
         {
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "No existe categoria con el id indicado.",
-                    StatusCode = 404,
-                };
+                return null;
             }
             Category? category = _categoryRepository.Update(dto, categoryId);
-            return new ServiceResult
+            GetCategoryById categoryToReturn = new()
             {
-                Message = $"La categoria fue actualizada: {category}",
-                StatusCode = 200,
+                Description = category.Description,
+                Name = category.Name,
+                Products = category.Products.Select(product => new ProductDataDto
+                {
+                    Name = product.Name,
+                    Description = product.Description,
+                    BasePrice = product.BasePrice,
+                    Discount = product.Discount,
+                    HappyHourEnd = product.HappyHourEnd,
+                    HappyHourStart = product.HappyHourStart,
+                    IsStandout = product.IsStandout,
+                    UrlImage = product.UrlImage,
+                }).ToList(),
             };
+            return categoryToReturn;
+        }
+        public List<GetCategoryById>? GetRestaurantCategories(int restaurantId)
+        {
+            var categories = _categoryRepository.GetRestaurantCategories(restaurantId);
+            if (categories == null)
+            {
+                return null;
+            }
+            else
+            {
+                return categories.Select(category => new GetCategoryById
+                {
+                    Id = category.Id,
+                    Description = category.Description,
+                    Name = category.Name,
+                    Products = category.Products.Select(product => new ProductDataDto
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Description = product.Description,
+                        BasePrice = product.BasePrice,
+                        Discount = product.Discount,
+                        HappyHourEnd = product.HappyHourEnd,
+                        HappyHourStart = product.HappyHourStart,
+                        IsStandout = product.IsStandout,
+                        UrlImage = product.UrlImage,
+                    }).ToList(),
+                }).ToList();
+
+            }
         }
     }
 }

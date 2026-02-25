@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using YaLlega.Entities;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 using YaLlegaBack.Services;
@@ -12,7 +13,7 @@ namespace YaLlegaBack.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public CategoriesController (ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
@@ -28,11 +29,10 @@ namespace YaLlegaBack.Controllers
             else
             {
                 var category = _categoryService.GetById((int)categoryId);
-                return Created("Producto Creado: ", category);
+                return Created("Categoria creada: ", category);
             }
         }
         [HttpGet("GetOneByid/{id}")]
-        [Authorize]
         public IActionResult GetOneById(int id)
         {
             if (id <= 0)
@@ -40,16 +40,30 @@ namespace YaLlegaBack.Controllers
                 return BadRequest("El ID ingresado debe ser mayor a 0");
             }
 
-            ServiceResult category= _categoryService.GetById(id);
+            GetCategoryById? category = _categoryService.GetById(id);
 
-            return StatusCode(category.StatusCode, category.Message);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(category);
+            }
         }
         [HttpPut("Update/{id}")]
         [Authorize]
         public IActionResult Update(UpdatedCategoryDto updatedCategory, int id)
         {
-            ServiceResult result = _categoryService.Update(updatedCategory, id);
-            return StatusCode(result.StatusCode, result.Message);
+            GetCategoryById? result = _categoryService.Update(updatedCategory, id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
         [HttpDelete("Delete/{id}")]
         [Authorize]
@@ -71,6 +85,26 @@ namespace YaLlegaBack.Controllers
         {
             ServiceResult result = _categoryService.RemoveProduct(categoryId, productsId);
             return StatusCode(result.StatusCode, result.Message);
+        }
+        [HttpGet("GetRestaurantCategories/{restaurantId}")]
+        public IActionResult GetRestaurantCategories (int restaurantId)
+        {
+            if (restaurantId <= 0)
+            {
+                return BadRequest("El ID ingresado debe ser mayor a 0");
+            }
+
+            List<GetCategoryById>? category = _categoryService.GetRestaurantCategories(restaurantId);
+
+            if (category == null)
+            {
+                return BadRequest("El restaurante no fue encontrado.");
+            }
+            if (category.Count() == 0)
+            {
+                return NotFound("El restaurante no tiene categorias");
+            }
+                return Ok(category);
         }
     }
 }

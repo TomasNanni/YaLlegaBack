@@ -7,7 +7,7 @@ namespace YaLlegaBack.Models
     public class NewUpdatedRestaurantDTO
     {
         [Required]
-        [StringLength(20, MinimumLength = 1)]
+        [StringLength(30, MinimumLength = 1)]
         public string Name { get; set; }
         [Required]
         public string UrlLogoImage { get; set; }

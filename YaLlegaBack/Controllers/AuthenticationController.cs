@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -53,6 +54,30 @@ namespace YaLlegaBack.Controllers
             }
 
             return Unauthorized();
+        }
+        [HttpGet("validateOwner/{restaurantId}")]
+        [Authorize]
+        public IActionResult ValidateOwner(int restaurantId)
+        {
+            if (restaurantId < 0)
+            {
+                return BadRequest("El id debe ser mayor a 0");
+            }
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                return Unauthorized("Usuario no validado.");
+            }
+            int userId = int.Parse(userIdClaim);
+            if (userId == restaurantId)
+            {
+                return Ok();
+            }
+            else
+            {
+                return Forbid();
+            }
+
         }
     }
 }

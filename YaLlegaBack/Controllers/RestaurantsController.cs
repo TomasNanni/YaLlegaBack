@@ -20,7 +20,6 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpGet("GetAll")]
-        [Authorize]
         public ActionResult<GetRestaurantByIdDto> GetAll()
         {
             IEnumerable<GetRestaurantByIdDto> restaurants = _restaurantService.GetAll();
@@ -34,11 +33,9 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpGet("GetOneByid")]
-        [Authorize]
-        public IActionResult GetOneById()
+        [HttpGet("GetOneByid/{userId}")]
+        public IActionResult GetOneById(int userId)
         {
-            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
             if (userId <= 0)
             {
                 return BadRequest("El ID ingresado debe ser mayor a 0");

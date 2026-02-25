@@ -65,6 +65,7 @@ namespace YaLlegaBack.Repositories
             var categoryToEdit = _context.Categories.First(category => category.Id == categoryId);
             categoryToEdit.Description = dto.Description;
             categoryToEdit.Name = dto.Name;
+            categoryToEdit.Products = dto.ProductIds.Select(pId => _context.Products.FirstOrDefault(product => product.Id == pId)).Where(product => product != null).ToList()!;
             _context.SaveChanges();
             return categoryToEdit;
         }
@@ -81,5 +82,18 @@ namespace YaLlegaBack.Repositories
         {
             return _context.Categories.Any (c => c.Name == categoryName);
         }
+        public List<Category>? GetRestaurantCategories(int restaurantId)
+        {
+            var restaurant = _context.Restaurants.Include(restaurant => restaurant.Categories).ThenInclude(category => category.Products).FirstOrDefault(restaurant => restaurant.UserId == restaurantId);
+            if (restaurant == null)
+            {
+                return null;
+            }
+            else
+            {
+                return restaurant.Categories.ToList();
+            }
+        }  
+
     }
 }
