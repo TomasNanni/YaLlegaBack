@@ -10,6 +10,6 @@ namespace YaLlegaBack.Interfaces
         public GetCategoryById? GetById(int categoryId);
         public ServiceResult Delete(int categoryId);
         public GetCategoryById? Update(UpdatedCategoryDto dto, int categoryId);
-        public List<GetCategoryById> GetRestaurantCategories(int restaurantId);
+        public List<GetCategoryById>? GetRestaurantCategories(int restaurantId);
     }
 }
