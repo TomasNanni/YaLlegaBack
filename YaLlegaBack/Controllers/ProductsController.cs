@@ -23,14 +23,18 @@ namespace YaLlegaBack.Controllers
         [Authorize]
         public ActionResult<ProductDataDto> GetAll()
         {
-            IEnumerable<ProductDataDto> products = _productService.GetAll();
-            if (products?.Any() != true)
+            try
             {
-                return NoContent();
-            }
-            else
-            {
+                IEnumerable<ProductDataDto> products = _productService.GetAll();
+                if (products?.Any() != true)
+                {
+                    return NoContent();
+                }
                 return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
             }
         }
 
@@ -43,28 +47,53 @@ namespace YaLlegaBack.Controllers
                 return BadRequest("El ID ingresado debe ser mayor a 0");
             }
 
-            ProductDataDto? product = _productService.GetById(id);
-
-            if (product is null)
+            try
             {
-                return NotFound();
-            }
+                ProductDataDto? product = _productService.GetById(id);
 
-            return Ok(product);
+                if (product is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(product);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
         [HttpPost("Create")]
         [Authorize]
         public IActionResult Create([FromBody] NewUpdatedProductDto dto)
         {
-            var productId = _productService.Create(dto);
-            if (productId == null)
+            if (dto == null)
             {
-                return BadRequest("Ya existe un producto con ese nombre.");
+                return BadRequest("Debe proporcionar datos válidos del producto.");
             }
-            else
+
+            try
             {
+                var productId = _productService.Create(dto);
+                if (productId == null || productId <= 0)
+                {
+                    return BadRequest("Ya existe un producto con ese nombre.");
+                }
+
                 var product = _productService.GetById((int)productId);
-                return Created("Producto Creado: ",product);
+                return Created("Producto Creado: ", product);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
             }
         }
 
@@ -72,15 +101,51 @@ namespace YaLlegaBack.Controllers
         [Authorize]
         public IActionResult Update(NewUpdatedProductDto updatedProduct, int productId)
         {
-            ServiceResult result = _productService.Update(updatedProduct, productId);
-            return StatusCode(result.StatusCode, result.Message);
+            if (productId <= 0)
+            {
+                return BadRequest("El ID del producto debe ser mayor a 0.");
+            }
+            if (updatedProduct == null)
+            {
+                return BadRequest("Debe proporcionar datos válidos del producto.");
+            }
+
+            try
+            {
+                ServiceResult result = _productService.Update(updatedProduct, productId);
+                return StatusCode(result.StatusCode, result.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
         [HttpDelete("Delete/{id}")]
         [Authorize]
         public IActionResult Delete(int id)
         {
-            ServiceResult message = _productService.Delete(id);
-            return StatusCode(message.StatusCode, message.Message);
+            if (id <= 0)
+            {
+                return BadRequest("El ID del producto debe ser mayor a 0.");
+            }
+
+            try
+            {
+                ServiceResult message = _productService.Delete(id);
+                return StatusCode(message.StatusCode, message.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
     }
 }

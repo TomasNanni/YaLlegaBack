@@ -6,9 +6,9 @@ namespace YaLlegaBack.Interfaces
     public interface ICartService
     {
         public GetCartByIdDto? GetById(int cartId);
-        public ServiceResult AddProduct(List<ProductDataDto> productsToAdd, int cartId);
-        public ServiceResult DeleteProduct(List<ProductDataDto> productsToRemove, int cartId);
-        public int? Create(List<int> productsId);
+        public ServiceResult AddProduct(List<int> productIds, int cartId);
+        public ServiceResult DeleteProduct(List<int> productIds, int cartId);
+        public int? Create(int productId);
         public ServiceResult Delete(int cartId);
     }
 }

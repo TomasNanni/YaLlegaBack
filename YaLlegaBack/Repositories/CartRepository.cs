@@ -13,30 +13,76 @@ namespace YaLlegaBack.Repositories
         {
             _context = context;
         }
-        public void AddProduct(List<Product> productsToAdd, int cartId)
+        public void AddProduct(List<int> productIds, int cartId)
         {
-            foreach (var product in productsToAdd)
+            var cart = _context.Carts.Include(c => c.Products).FirstOrDefault(c => c.Id == cartId);
+            if (cart == null)
             {
-                _context.Carts.First(c => c.Id == cartId).Products.Add(product);
+                throw new ArgumentException($"Carrito con id {cartId} no encontrado");
             }
-            return;
+
+            var notFoundIds = new List<int>();
+            foreach (var productId in productIds)
+            {
+                var product = _context.Products.Find(productId);
+                if (product == null)
+                {
+                    notFoundIds.Add(productId);
+                }
+                else
+                {
+                    cart.Products.Add(product);
+                }
+            }
+
+            if (notFoundIds.Count > 0)
+            {
+                throw new ArgumentException($"Los siguientes productos no fueron encontrados: {string.Join(", ", notFoundIds)}");
+            }
+
+            _context.SaveChanges();
         }
 
-        public void DeleteProduct(List<Product> productsToRemove, int cartId)
+        public void DeleteProduct(List<int> productIds, int cartId)
         {
-            foreach (var product in productsToRemove)
+            var cart = _context.Carts.Include(c => c.Products).FirstOrDefault(c => c.Id == cartId);
+            if (cart == null)
             {
-                _context.Carts.First(c => c.Id == cartId).Products.Remove(product);
+                throw new ArgumentException($"Carrito con id {cartId} no encontrado");
             }
-            return;
+
+            var notFoundIds = new List<int>();
+            foreach (var productId in productIds)
+            {
+                var product = cart.Products.FirstOrDefault(p => p.Id == productId);
+                if (product == null)
+                {
+                    notFoundIds.Add(productId);
+                }
+                else
+                {
+                    cart.Products.Remove(product);
+                }
+            }
+
+            if (notFoundIds.Count > 0)
+            {
+                throw new ArgumentException($"Los siguientes productos no fueron encontrados en el carrito: {string.Join(", ", notFoundIds)}");
+            }
+
+            _context.SaveChanges();
         }
 
-        public int Create(List<int> productsId)
+        public int Create(int productId)
         {
-            List<Product> products = productsId.Select(id => _context.Products.Find(id)).Where(product => product  != null).ToList();
+            Product? product = _context.Products.Find(productId);
+            if (product == null)
+            {
+                throw new ArgumentException($"Producto con id {productId} no encontrado");
+            }
             Cart newCart = new()
             {
-                Products = products,
+                Products = new List<Product> { product },
             };
             var createdCart = _context.Carts.Add(newCart).Entity;
             _context.SaveChanges();
@@ -45,9 +91,13 @@ namespace YaLlegaBack.Repositories
 
         public void Delete(int cartId)
         {
-            _context.Carts.Remove(_context.Carts.Single(cart => cart.Id == cartId));
+            var cart = _context.Carts.FirstOrDefault(c => c.Id == cartId);
+            if (cart == null)
+            {
+                throw new ArgumentException($"Carrito con id {cartId} no encontrado");
+            }
+            _context.Carts.Remove(cart);
             _context.SaveChanges();
-            return;
         }
 
         public Cart? GetById(int cartId)

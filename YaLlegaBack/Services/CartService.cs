@@ -12,25 +12,17 @@ namespace YaLlegaBack.Services
         {
             _cartRepository = cartRepository;
         }
-        public ServiceResult AddProduct(List<ProductDataDto> productsToAdd, int cartId)
+        public ServiceResult AddProduct(List<int> productIds, int cartId)
         {
-            List<Product> products = new();
-            foreach (var productData in productsToAdd)
+            if (productIds == null || productIds.Count == 0)
             {
-                Product product = new Product
-                {
-                    Name = productData.Name,
-                    Description = productData.Description,
-                    UrlImage = productData.UrlImage,
-                    BasePrice = productData.BasePrice,
-                    Discount = productData.Discount,
-                    IsStandout = productData.IsStandout,
-                    HappyHourStart = productData.HappyHourStart,
-                    HappyHourEnd = productData.HappyHourEnd,
-                };
-                products.Add(product);
+                throw new ArgumentException("La lista de ids de productos no puede estar vacía");
             }
-            _cartRepository.AddProduct(products, cartId);
+            if (productIds.Any(id => id <= 0))
+            {
+                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
+            }
+            _cartRepository.AddProduct(productIds, cartId);
             return new ServiceResult
             {
                 Message = "Productos agregados correctamente.",
@@ -38,13 +30,26 @@ namespace YaLlegaBack.Services
             };
         }
 
-        public int? Create(List<int> productsId)
+        public int? Create(int productId)
         {
-            return _cartRepository.Create(productsId);
+            if (productId <= 0)
+            {
+                throw new ArgumentException("El id del producto debe ser mayor a 0");
+            }
+            var result = _cartRepository.Create(productId);
+            if (result <= 0)
+            {
+                throw new ArgumentException("No se pudo crear el carrito");
+            }
+            return result;
         }
 
         public ServiceResult Delete(int cartId)
         {
+            if (cartId <= 0)
+            {
+                throw new ArgumentException("El id del carrito debe ser mayor a 0");
+            }
             _cartRepository.Delete(cartId);
             var result = new ServiceResult
             {
@@ -54,25 +59,17 @@ namespace YaLlegaBack.Services
             return result;
         }
 
-        public ServiceResult DeleteProduct(List<ProductDataDto> productsToRemove, int cartId)
+        public ServiceResult DeleteProduct(List<int> productIds, int cartId)
         {
-            var products = new List<Product>();
-            foreach (var productData in productsToRemove)
+            if (productIds == null || productIds.Count == 0)
             {
-                Product product = new Product
-                {
-                    Name = productData.Name,
-                    Description = productData.Description,
-                    UrlImage = productData.UrlImage,
-                    BasePrice = productData.BasePrice,
-                    Discount = productData.Discount,
-                    IsStandout = productData.IsStandout,
-                    HappyHourStart = productData.HappyHourStart,
-                    HappyHourEnd = productData.HappyHourEnd,
-                };
-                products.Add(product);
+                throw new ArgumentException("La lista de ids de productos no puede estar vacía");
             }
-            _cartRepository.DeleteProduct(products, cartId);
+            if (productIds.Any(id => id <= 0))
+            {
+                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
+            }
+            _cartRepository.DeleteProduct(productIds, cartId);
             var result = new ServiceResult
             {
                 Message = "Productos removidos correctamente del carrito.",

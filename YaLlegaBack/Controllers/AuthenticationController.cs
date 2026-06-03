@@ -27,57 +27,90 @@ namespace YaLlegaBack.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] AuthDto credentials)
         {
-            User? user = _userService.Authenticate(credentials.EmailAddress, credentials.Password);
-
-            if (user is not null)
+            if (credentials == null || string.IsNullOrWhiteSpace(credentials.EmailAddress) || string.IsNullOrWhiteSpace(credentials.Password))
             {
-                var securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Authentication:SecretForKey"]));
-
-                var signature = new SigningCredentials(securityPassword, SecurityAlgorithms.HmacSha256);
-
-                var claimsForToken = new List<Claim>
-            {
-                new Claim("sub", user.Id.ToString()),
-            };
-
-                var jwtSecurityToken = new JwtSecurityToken(
-                    _config["Authentication:Issuer"],
-                    _config["Authentication:Audience"],
-                    claimsForToken,
-                    DateTime.UtcNow,
-                    DateTime.UtcNow.AddHours(1),
-                    signature
-                );
-
-                var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-                return Ok(tokenToReturn);
+                return BadRequest("Debe proporcionar email y contraseña válidos.");
             }
 
-            return Unauthorized();
+            try
+            {
+                User? user = _userService.Authenticate(credentials.EmailAddress, credentials.Password);
+
+                if (user is not null)
+                {
+                    var securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Authentication:SecretForKey"]));
+
+                    var signature = new SigningCredentials(securityPassword, SecurityAlgorithms.HmacSha256);
+
+                    var claimsForToken = new List<Claim>
+                    {
+                        new Claim("sub", user.Id.ToString()),
+                    };
+
+                    var jwtSecurityToken = new JwtSecurityToken(
+                        _config["Authentication:Issuer"],
+                        _config["Authentication:Audience"],
+                        claimsForToken,
+                        DateTime.UtcNow,
+                        DateTime.UtcNow.AddHours(1),
+                        signature
+                    );
+
+                    var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                    return Ok(tokenToReturn);
+                }
+
+                return Unauthorized();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
         [HttpGet("validateOwner/{restaurantId}")]
         [Authorize]
         public IActionResult ValidateOwner(int restaurantId)
         {
-            if (restaurantId < 0)
+            if (restaurantId <= 0)
             {
                 return BadRequest("El id debe ser mayor a 0");
             }
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
-            if (string.IsNullOrEmpty(userIdClaim))
-            {
-                return Unauthorized("Usuario no validado.");
-            }
-            int userId = int.Parse(userIdClaim);
-            if (userId == restaurantId)
-            {
-                return Ok();
-            }
-            else
-            {
-                return Forbid();
-            }
 
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    return Unauthorized("Usuario no validado.");
+                }
+
+                int userId = int.Parse(userIdClaim);
+                if (userId <= 0)
+                {
+                    return Unauthorized("Usuario inválido.");
+                }
+
+                if (userId == restaurantId)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return Forbid();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
     }
 }

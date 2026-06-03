@@ -22,14 +22,18 @@ namespace YaLlegaBack.Controllers
         [HttpGet("GetAll")]
         public ActionResult<GetRestaurantByIdDto> GetAll()
         {
-            IEnumerable<GetRestaurantByIdDto> restaurants = _restaurantService.GetAll();
-            if (restaurants?.Any() != true)
+            try
             {
-                return NoContent();
-            }
-            else
-            {
+                IEnumerable<GetRestaurantByIdDto> restaurants = _restaurantService.GetAll();
+                if (restaurants?.Any() != true)
+                {
+                    return NoContent();
+                }
                 return Ok(restaurants);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
             }
         }
 
@@ -41,33 +45,80 @@ namespace YaLlegaBack.Controllers
                 return BadRequest("El ID ingresado debe ser mayor a 0");
             }
 
-            GetRestaurantByIdDto? restaurant = _restaurantService.GetById(userId);
-
-            if (restaurant is null)
+            try
             {
-                return NotFound();
-            }
+                GetRestaurantByIdDto? restaurant = _restaurantService.GetById(userId);
 
-            return Ok(restaurant);
+                if (restaurant is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(restaurant);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
 
         [HttpPut("Update")]
         [Authorize]
         public IActionResult Update(NewUpdatedRestaurantDTO updatedRestaurant)
         {
-            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
-            ServiceResult result = _restaurantService.Update(updatedRestaurant, userId);
-            return StatusCode(result.StatusCode, result.Message);
+            if (updatedRestaurant == null)
+            {
+                return BadRequest("Debe proporcionar datos válidos del restaurante.");
+            }
+
+            try
+            {
+                int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+                if (userId <= 0)
+                {
+                    return Unauthorized("Usuario no validado.");
+                }
+                ServiceResult result = _restaurantService.Update(updatedRestaurant, userId);
+                return StatusCode(result.StatusCode, result.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
         [HttpGet("IsOpen/{id}")]
-        public IActionResult IsOpen (int id)
+        public IActionResult IsOpen(int id)
         {
-            var result = _restaurantService.RestaurantIsOpen(id) == null;
-            if (result == null)
+            if (id <= 0)
             {
-                return NotFound();
+                return BadRequest("El ID ingresado debe ser mayor a 0");
             }
-            return Ok(result);
+
+            try
+            {
+                var result = _restaurantService.RestaurantIsOpen(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
     }
 }

@@ -91,7 +91,7 @@ namespace YaLlegaBack.Repositories
             }
             else
             {
-                return restaurant.Categories.ToList();
+                return restaurant.Categories.Where(category => category != null).ToList();
             }
         }  
 

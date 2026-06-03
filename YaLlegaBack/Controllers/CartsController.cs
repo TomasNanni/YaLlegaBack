@@ -25,65 +25,116 @@ namespace YaLlegaBack.Controllers
                 return BadRequest("El ID ingresado debe ser mayor a 0");
             }
 
-            GetCartByIdDto? cart = _cartService.GetById(id);
-
-            if (cart is null)
+            try
             {
-                return NotFound();
-            }
+                GetCartByIdDto? cart = _cartService.GetById(id);
 
-            return Ok(cart.Products);
+                if (cart is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(cart.Products);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
 
-        [HttpPost("Create")]
+        [HttpPost("Create/{productId}")]
         [Authorize]
-        public IActionResult Create([FromBody] List<int> productsId)
+        public IActionResult Create(int productId)
         {
-            if (productsId == null)
+            if (productId <= 0)
             {
-                return BadRequest("Debe introducir minimo un producto para agregar");
+                return BadRequest("El id del producto debe ser mayor a 0");
             }
-            var result = _cartService.Create(productsId);
-            if (result == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Created($"/cart/{result}", new { Message = $"El id del carrito creado es {result}" });
 
+            try
+            {
+                var result = _cartService.Create(productId);
+                if (result == null || result <= 0)
+                {
+                    return BadRequest("No se pudo crear el carrito");
+                }
+                return Created($"/cart/{result}", new { Message = $"El id del carrito creado es {result}" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
             }
         }
 
         [HttpPatch("AddProducts/{cartId}")]
         [Authorize]
-        public IActionResult AddProduct([FromBody] List<ProductDataDto> products, int cartId)
+        public IActionResult AddProduct([FromBody] List<int> productIds, int cartId)
         {
             if (cartId <= 0)
             {
                 return BadRequest("El id del carrito debe ser mayor a 0.");
             }
-            if (products == null)
+            if (productIds == null || productIds.Count == 0)
             {
                 return BadRequest("Debe ingresar minimo un producto que agregar.");
             }
-            ServiceResult result = _cartService.AddProduct(products, cartId);
-            return StatusCode(result.StatusCode, result.Message);
+            if (productIds.Any(id => id <= 0))
+            {
+                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
+            }
+
+            try
+            {
+                ServiceResult result = _cartService.AddProduct(productIds, cartId);
+                return StatusCode(result.StatusCode, result.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
         [HttpPatch("DeleteProducts/{cartId}")]
         [Authorize]
-        public IActionResult DeleteProduct([FromBody] List<ProductDataDto> products, int cartId)
+        public IActionResult DeleteProduct([FromBody] List<int> productIds, int cartId)
         {
             if (cartId <= 0)
             {
                 return BadRequest("El id del carrito debe ser mayor a 0.");
             }
-            if (products == null)
+            if (productIds == null || productIds.Count == 0)
             {
                 return BadRequest("Debe ingresar minimo un producto que quitar del carrito.");
             }
-            ServiceResult result = _cartService.DeleteProduct(products, cartId);
-            return StatusCode(result.StatusCode, result.Message);
+            if (productIds.Any(id => id <= 0))
+            {
+                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
+            }
+
+            try
+            {
+                ServiceResult result = _cartService.DeleteProduct(productIds, cartId);
+                return StatusCode(result.StatusCode, result.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
 
         [HttpDelete("Delete/{cartId}")]
@@ -94,8 +145,20 @@ namespace YaLlegaBack.Controllers
             {
                 return BadRequest("El id del carrito debe ser mayor a 0.");
             }
-            ServiceResult result = _cartService.Delete(cartId);
-            return StatusCode(result.StatusCode, result.Message);
+
+            try
+            {
+                ServiceResult result = _cartService.Delete(cartId);
+                return StatusCode(result.StatusCode, result.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
     }
 }

@@ -15,65 +15,86 @@ namespace YaLlegaBack.Services
         }
         public int? Create(NewCategoryDto dto, List<int> productsId)
         {
+            if (dto == null)
+            {
+                throw new ArgumentException("Los datos de la categoría no pueden estar vacíos");
+            }
+            if (string.IsNullOrWhiteSpace(dto.Name))
+            {
+                throw new ArgumentException("El nombre de la categoría no puede estar vacío");
+            }
             if (_categoryRepository.CheckIfCategoryNameExists(dto.Name) == true)
             {
-                return null;
+                throw new ArgumentException("Ya existe una categoría con ese nombre");
             }
-            return _categoryRepository.Create(dto, productsId);
+            var result = _categoryRepository.Create(dto, productsId);
+            if (result == null || result <= 0)
+            {
+                throw new ArgumentException("No se pudo crear la categoría");
+            }
+            return result;
         }
         public ServiceResult RemoveProduct(int categoryId, List<int> productId)
         {
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("El id de la categoría debe ser mayor a 0");
+            }
+            if (productId == null || productId.Count == 0)
+            {
+                throw new ArgumentException("La lista de ids de productos no puede estar vacía");
+            }
+            if (productId.Any(id => id <= 0))
+            {
+                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
+            }
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "No existe categoria con el id indicado.",
-                    StatusCode = 404,
-                };
+                throw new ArgumentException("No existe categoría con el id indicado.");
             }
             foreach (var id in productId)
             {
                 if (_categoryRepository.CheckIfProductBelongs(id, categoryId) == false)
                 {
-                    return new ServiceResult
-                    {
-                        Message = $"El producto de id {id} no pertenece a la categoria",
-                        StatusCode = 400,
-                    };
+                    throw new ArgumentException($"El producto de id {id} no pertenece a la categoría");
                 }
             }
             _categoryRepository.DeleteProduct(productId, categoryId);
             return new ServiceResult
             {
-                Message = "Producto/s borrado/s de categoria correctamente.",
+                Message = "Producto/s borrado/s de categoría correctamente.",
                 StatusCode = 204,
             };
         }
         public ServiceResult AddProduct(int categoryId, List<int> productId)
         {
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("El id de la categoría debe ser mayor a 0");
+            }
+            if (productId == null || productId.Count == 0)
+            {
+                throw new ArgumentException("La lista de ids de productos no puede estar vacía");
+            }
+            if (productId.Any(id => id <= 0))
+            {
+                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
+            }
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "No existe categoria con el id indicado.",
-                    StatusCode = 404,
-                };
+                throw new ArgumentException("No existe categoría con el id indicado.");
             }
             foreach (var id in productId)
             {
                 if (_categoryRepository.CheckIfProductBelongs(id, categoryId) == true)
                 {
-                    return new ServiceResult
-                    {
-                        Message = $"El producto de id {id} ya pertenece a la categoria",
-                        StatusCode = 400,
-                    };
+                    throw new ArgumentException($"El producto de id {id} ya pertenece a la categoría");
                 }
             }
             _categoryRepository.AddProduct(productId, categoryId);
             return new ServiceResult
             {
-                Message = "Producto/s agreagado/s a categoria correctamente.",
+                Message = "Producto/s agregado/s a categoría correctamente.",
                 StatusCode = 204,
             };
         }
@@ -104,28 +125,40 @@ namespace YaLlegaBack.Services
         }
         public ServiceResult Delete(int categoryId)
         {
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("El id de la categoría debe ser mayor a 0");
+            }
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "No existe categoria con el id indicado.",
-                    StatusCode = 404,
-                };
+                throw new ArgumentException("No existe categoría con el id indicado.");
             }
             _categoryRepository.Delete(categoryId);
             return new ServiceResult
             {
-                Message = "La categoria se borro correctamente.",
+                Message = "La categoría se borró correctamente.",
                 StatusCode = 201,
             };
         }
         public GetCategoryById? Update(UpdatedCategoryDto dto, int categoryId)
         {
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("El id de la categoría debe ser mayor a 0");
+            }
+            if (dto == null)
+            {
+                throw new ArgumentException("Los datos de la categoría no pueden estar vacíos");
+            }
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
             {
-                return null;
+                throw new ArgumentException("No existe categoría con el id indicado.");
             }
             Category? category = _categoryRepository.Update(dto, categoryId);
+            if (category == null)
+            {
+                throw new ArgumentException("No se pudo actualizar la categoría");
+            }
             GetCategoryById categoryToReturn = new()
             {
                 Description = category.Description,

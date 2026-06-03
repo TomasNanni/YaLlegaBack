@@ -18,10 +18,18 @@ namespace YaLlegaBack.Services
         }
         public int? Create(NewUpdatedProductDto newProduct)
         {
+            if (newProduct == null)
+            {
+                throw new ArgumentException("Los datos del producto no pueden estar vacíos");
+            }
+            if (string.IsNullOrWhiteSpace(newProduct.Name))
+            {
+                throw new ArgumentException("El nombre del producto no puede estar vacío");
+            }
             List<Category> categories = _productRepository.GetCategories().Where(c => newProduct.categoriesId.Contains(c.Id)).ToList();
             if (_productRepository.CheckIfProductNameExists(newProduct.Name, categories) == true)
             {
-                return null;
+                throw new ArgumentException("Ya existe un producto con ese nombre");
             }
             Product product = new Product
             {
@@ -34,18 +42,23 @@ namespace YaLlegaBack.Services
                 HappyHourStart = newProduct.HappyHourStart,
                 HappyHourEnd = newProduct.HappyHourEnd,
             };
-            return _productRepository.Create(product, newProduct.categoriesId);
+            var result = _productRepository.Create(product, newProduct.categoriesId);
+            if (result == null || result <= 0)
+            {
+                throw new ArgumentException("No se pudo crear el producto");
+            }
+            return result;
         }
 
         public ServiceResult Delete(int productId)
         {
+            if (productId <= 0)
+            {
+                throw new ArgumentException("El id del producto debe ser mayor a 0");
+            }
             if (_productRepository.CheckIfProductExists(productId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "El producto no existe.",
-                    StatusCode = 404,
-                };
+                throw new ArgumentException("El producto no existe.");
             }
             List<int> categoriesId = _productRepository.GetCategoryId(productId);
             if (_categoryService.RemoveProduct(productId, categoriesId).StatusCode == 200)
@@ -59,11 +72,7 @@ namespace YaLlegaBack.Services
             }
             else
             {
-                return new ServiceResult
-                {
-                    Message = "No se encontro categoria a la cual pertenezca el producto.",
-                    StatusCode = 400
-                };
+                throw new ArgumentException("No se encontró categoría a la cual pertenezca el producto.");
             }
         }
 
@@ -148,43 +157,44 @@ namespace YaLlegaBack.Services
 
         public ServiceResult Update(NewUpdatedProductDto updatedProduct, int productId)
         {
+            if (productId <= 0)
+            {
+                throw new ArgumentException("El id del producto debe ser mayor a 0");
+            }
+            if (updatedProduct == null)
+            {
+                throw new ArgumentException("Los datos del producto no pueden estar vacíos");
+            }
+            if (string.IsNullOrWhiteSpace(updatedProduct.Name))
+            {
+                throw new ArgumentException("El nombre del producto no puede estar vacío");
+            }
             if (_productRepository.CheckIfProductExists(productId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "El producto a actualizar no existe",
-                    StatusCode = 404,
-                };
+                throw new ArgumentException("El producto a actualizar no existe");
             }
             List<Category> categories = _productRepository.GetCategoriesOfProduct(productId);
             if (_productRepository.CheckIfProductNameExists(updatedProduct.Name, categories) == true)
             {
-                return new ServiceResult
-                {
-                    Message = "Ya existe un prodcuto con ese nombre dentro de su restaurante",
-                    StatusCode = 400,
-                };
+                throw new ArgumentException("Ya existe un producto con ese nombre dentro de su restaurante");
             }
-            else
+            Product product = new Product
             {
-                Product product = new Product
-                {
-                    Name = updatedProduct.Name,
-                    Description = updatedProduct.Description,
-                    BasePrice = updatedProduct.BasePrice,
-                    UrlImage = updatedProduct.UrlImage,
-                    Discount = updatedProduct.Discount,
-                    IsStandout = updatedProduct.IsStandout,
-                    HappyHourEnd = updatedProduct.HappyHourEnd,
-                    HappyHourStart = updatedProduct.HappyHourStart,
-                };
-                _productRepository.Update(product, productId);
-                return new ServiceResult
-                {
-                    Message = "Producto actualizado correctamente",
-                    StatusCode = 200,
-                };
-            }
+                Name = updatedProduct.Name,
+                Description = updatedProduct.Description,
+                BasePrice = updatedProduct.BasePrice,
+                UrlImage = updatedProduct.UrlImage,
+                Discount = updatedProduct.Discount,
+                IsStandout = updatedProduct.IsStandout,
+                HappyHourEnd = updatedProduct.HappyHourEnd,
+                HappyHourStart = updatedProduct.HappyHourStart,
+            };
+            _productRepository.Update(product, productId);
+            return new ServiceResult
+            {
+                Message = "Producto actualizado correctamente",
+                StatusCode = 200,
+            };
         }
     }
 }

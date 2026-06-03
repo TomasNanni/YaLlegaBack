@@ -31,9 +31,21 @@ namespace YaLlegaBack.Services
 
         public int? Create(NewUpdatedUserDto newUser, NewUpdatedRestaurantDTO newRestaurantData)
         {
+            if (newUser == null)
+            {
+                throw new ArgumentException("Los datos del usuario no pueden estar vacíos");
+            }
+            if (newRestaurantData == null)
+            {
+                throw new ArgumentException("Los datos del restaurante no pueden estar vacíos");
+            }
+            if (string.IsNullOrWhiteSpace(newUser.EmailAddress) || !IsValidEmail(newUser.EmailAddress))
+            {
+                throw new ArgumentException("El email no es válido");
+            }
             if (_userRepository.GetByEmail(newUser.EmailAddress) != null)
             {
-                return null;
+                throw new ArgumentException("Ya existe un usuario con ese email");
             }
             var user = new User()
             {
@@ -43,11 +55,15 @@ namespace YaLlegaBack.Services
                 Password = newUser.Password,
             };
             int? newUserId = _userRepository.Create(user);
+            if (newUserId == null || newUserId <= 0)
+            {
+                throw new ArgumentException("No se pudo crear el usuario");
+            }
             var newRestaurantId = _restaurantService.Create(newRestaurantData, newUserId);
             if (newRestaurantId == null)
             {
                 _userRepository.Delete((int)newUserId);
-                return null;
+                throw new ArgumentException("No se pudo crear el restaurante");
             }
             else
             {
@@ -60,6 +76,10 @@ namespace YaLlegaBack.Services
 
         public ServiceResult Delete(int userId)
         {
+            if (userId <= 0)
+            {
+                throw new ArgumentException("El id del usuario debe ser mayor a 0");
+            }
             if (CheckIfUserExists(userId))
             {
                 //Borra user y restaurante en cascada
@@ -85,11 +105,7 @@ namespace YaLlegaBack.Services
             }
             else
             {
-                return new ServiceResult
-                {
-                    Message = "El usuario no existe.",
-                    StatusCode = 400,
-                };
+                throw new ArgumentException("El usuario no existe.");
             }
         }
 
@@ -145,29 +161,25 @@ namespace YaLlegaBack.Services
 
         public ServiceResult Update(NewUpdatedUserDto updatedUser, int userId)
         {
+            if (userId <= 0)
+            {
+                throw new ArgumentException("El id del usuario debe ser mayor a 0");
+            }
+            if (updatedUser == null)
+            {
+                throw new ArgumentException("Los datos del usuario no pueden estar vacíos");
+            }
             if (CheckIfUserExists(userId) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "El usuario que quizo actualizar no existe.",
-                    StatusCode = 400,
-                };
+                throw new ArgumentException("El usuario que intentó actualizar no existe.");
             }
             if (string.IsNullOrWhiteSpace(updatedUser.EmailAddress) || IsValidEmail(updatedUser.EmailAddress) == false)
             {
-                return new ServiceResult
-                {
-                    Message = "La dirección de email no existe o no es valida.",
-                    StatusCode = 400,
-                };
+                throw new ArgumentException("La dirección de email no existe o no es válida.");
             }
             if (GetByEmail(updatedUser.EmailAddress) != null)
             {
-                return new ServiceResult
-                {
-                    Message = "Ya existe un usuario con la dirección de correo ingresada.",
-                    StatusCode = 400,
-                };
+                throw new ArgumentException("Ya existe un usuario con la dirección de correo ingresada.");
             }
             User user = new User
             {

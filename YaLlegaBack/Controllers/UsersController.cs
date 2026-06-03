@@ -23,14 +23,18 @@ namespace YaLlegaBack.Controllers
         [Authorize]
         public ActionResult<UserDataDto> GetAll()
         {
-            IEnumerable<UserDataDto> users = _userService.GetAll();
-            if (users?.Any() != true)
+            try
             {
-                return NoContent();
+                IEnumerable<UserDataDto> users = _userService.GetAll();
+                if (users?.Any() != true)
+                {
+                    return NoContent();
+                }
+                return Ok(users);
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(users);                
+                return StatusCode(500, "Error interno del servidor");
             }
         }
 
@@ -43,32 +47,54 @@ namespace YaLlegaBack.Controllers
                 return BadRequest("El ID ingresado debe ser distinto de 0");
             }
 
-            GetUserByIdDto? user = _userService.GetById(id);
-
-            if (user is null)
+            try
             {
-                return NotFound();
-            }
+                GetUserByIdDto? user = _userService.GetById(id);
 
-            return Ok(user);
+                if (user is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
 
         [HttpGet("GetOneByEmail/{email}")]
         public IActionResult GetOneByEmail(string email)
         {
-            if (email == null)
+            if (string.IsNullOrWhiteSpace(email))
             {
-                return BadRequest("Debe ingresar una dirección de email.");
+                return BadRequest("Debe ingresar una dirección de email válida.");
             }
 
-            GetUserByIdDto? user = _userService.GetByEmail(email);
-
-            if (user is null)
+            try
             {
-                return NotFound();
-            }
+                GetUserByIdDto? user = _userService.GetByEmail(email);
 
-            return Ok(user);
+                if (user is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
 
  
@@ -76,13 +102,19 @@ namespace YaLlegaBack.Controllers
         [AllowAnonymous]
         public IActionResult Create([FromBody] CreateUserRequest dto)
         {
-            int? newUserId = _userService.Create(dto.User , dto.Restaurant);
-            if (newUserId == null)
+            if (dto == null || dto.User == null || dto.Restaurant == null)
             {
-                return BadRequest("Ya existe un usuario con esos datos.");
+                return BadRequest("Debe proporcionar datos de usuario y restaurante válidos.");
             }
-            else
+
+            try
             {
+                int? newUserId = _userService.Create(dto.User, dto.Restaurant);
+                if (newUserId == null || newUserId <= 0)
+                {
+                    return BadRequest("Ya existe un usuario con esos datos.");
+                }
+
                 GetUserByIdDto userDto = _userService.GetById((int)newUserId);
                 GetRestaurantByIdDto restaurant = _userService.GetRestaurantDto((int)newUserId);
                 var response = new
@@ -91,7 +123,15 @@ namespace YaLlegaBack.Controllers
                     Usuario = userDto,
                     Restaurante = restaurant
                 };
-                return Created("Usuario Creado: ",response);
+                return Created("Usuario Creado: ", response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
             }
         }
 
@@ -99,18 +139,53 @@ namespace YaLlegaBack.Controllers
         [Authorize]
         public IActionResult UpdateUser(NewUpdatedUserDto updatedUser)
         {
-            int userToUpdateId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
-            ServiceResult result = _userService.Update(updatedUser, userToUpdateId);
-            return StatusCode(result.StatusCode, result.Message);
+            if (updatedUser == null)
+            {
+                return BadRequest("Debe proporcionar datos válidos de usuario.");
+            }
+
+            try
+            {
+                int userToUpdateId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+                if (userToUpdateId <= 0)
+                {
+                    return Unauthorized("Usuario no validado.");
+                }
+                ServiceResult result = _userService.Update(updatedUser, userToUpdateId);
+                return StatusCode(result.StatusCode, result.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
 
         [HttpDelete("Delete")]
         [Authorize]
         public IActionResult Delete()
         {
-            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
-            ServiceResult message = _userService.Delete(userId);
-            return StatusCode(message.StatusCode, message.Message);
+            try
+            {
+                int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+                if (userId <= 0)
+                {
+                    return Unauthorized("Usuario no validado.");
+                }
+                ServiceResult message = _userService.Delete(userId);
+                return StatusCode(message.StatusCode, message.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error interno del servidor");
+            }
         }
     }
 }
