@@ -18,6 +18,10 @@ namespace YaLlegaBack.Models
         public int Discount { get; set; }
         [Required]
         public bool IsStandout { get; set; }
+        [Required]
+        public int RestaurantId { get; set; }
+        [Required]
+        public string RestaurantName { get; set; }
         public TimeOnly? HappyHourStart { get; set; }
         public TimeOnly? HappyHourEnd { get; set; }
     }
