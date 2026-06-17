@@ -47,7 +47,6 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpPost("Create/{productId}")]
-        [Authorize]
         public IActionResult Create(int productId)
         {
             if (productId <= 0)
@@ -75,7 +74,6 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpPatch("AddProducts/{cartId}")]
-        [Authorize]
         public IActionResult AddProduct([FromBody] List<int> productIds, int cartId)
         {
             if (cartId <= 0)
@@ -106,7 +104,6 @@ namespace YaLlegaBack.Controllers
             }
         }
         [HttpPatch("DeleteProducts/{cartId}")]
-        [Authorize]
         public IActionResult DeleteProduct([FromBody] List<int> productIds, int cartId)
         {
             if (cartId <= 0)

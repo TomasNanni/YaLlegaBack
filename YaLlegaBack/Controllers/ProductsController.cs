@@ -39,7 +39,6 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpGet("GetOneByid/{id}")]
-        [Authorize]
         public IActionResult GetOneById(int id)
         {
             if (id <= 0)
