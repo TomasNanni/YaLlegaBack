@@ -1,4 +1,4 @@
-﻿using YaLlega.Entities;
+using YaLlega.Entities;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 
@@ -89,17 +89,23 @@ namespace YaLlegaBack.Services
             {
                Id = cart.Id,
             };
-            cartForController.Products = cart.Products.Select(product => new ProductDataDto 
-            { 
-                Id = product.Id,
-                Name = product.Name, 
-                Description = product.Description, 
-                UrlImage = product.UrlImage, 
-                BasePrice = product.BasePrice, 
-                Discount = product.Discount, 
-                IsStandout = product.IsStandout, 
-                HappyHourStart = product.HappyHourStart, 
-                HappyHourEnd = product.HappyHourEnd, 
+            cartForController.Products = cart.Products.Select(product =>
+            {
+                var restaurant = product.Categories.First().Restaurant;
+                return new ProductDataDto
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    UrlImage = product.UrlImage,
+                    BasePrice = product.BasePrice,
+                    Discount = product.Discount,
+                    IsStandout = product.IsStandout,
+                    HappyHourStart = product.HappyHourStart,
+                    HappyHourEnd = product.HappyHourEnd,
+                    RestaurantName = restaurant.Name,
+                    RestaurantId = restaurant.UserId,
+                };
             }).ToList();
             return cartForController;
         }

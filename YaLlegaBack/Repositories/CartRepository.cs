@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using YaLlega.Entities;
 using YaLlegaBack.Data;
 using YaLlegaBack.Interfaces;
@@ -102,7 +102,11 @@ namespace YaLlegaBack.Repositories
 
         public Cart? GetById(int cartId)
         {
-            return _context.Carts.Include(cart => cart.Products).FirstOrDefault(cart => cart.Id == cartId);
+            return _context.Carts
+                .Include(cart => cart.Products)
+                    .ThenInclude(p => p.Categories)
+                        .ThenInclude(c => c.Restaurant)
+                .FirstOrDefault(cart => cart.Id == cartId);
         }
     }
 }
