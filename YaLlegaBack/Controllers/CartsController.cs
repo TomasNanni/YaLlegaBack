@@ -17,7 +17,6 @@ namespace YaLlegaBack.Controllers
             _cartService = cartService;
         }
         [HttpGet("GetOneByid/{id}")]
-        [Authorize]
         public IActionResult GetOneById(int id)
         {
             if (id <= 0)
@@ -135,7 +134,6 @@ namespace YaLlegaBack.Controllers
         }
 
         [HttpDelete("Delete/{cartId}")]
-        [Authorize]
         public IActionResult Delete(int cartId)
         {
             if (cartId <= 0)

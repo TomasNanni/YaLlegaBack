@@ -103,6 +103,7 @@ namespace YaLlegaBack.Services
             {
                 return new ProductDataDto
                 {
+                    Id = product.Id,
                     Name = product.Name,
                     Description = product.Description,
                     UrlImage = product.UrlImage,
