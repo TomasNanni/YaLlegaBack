@@ -1,17 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using YaLlega.Entities;
 using YaLlegaBack.Data;
 using YaLlegaBack.Interfaces;
 
 namespace YaLlegaBack.Repositories
 {
-    public class RestaurantRepostory : IRestaurantRepository
+    public class RestaurantRepository : IRestaurantRepository
     {
         private YaLlegaBackContext _context;
 
-        public RestaurantRepostory(YaLlegaBackContext context)
+        public RestaurantRepository(YaLlegaBackContext context)
         {
             _context = context;
         }
@@ -54,20 +52,6 @@ namespace YaLlegaBack.Repositories
         {
             _context.Restaurants.Remove(_context.Restaurants.Single(restaurant => restaurant.UserId == userId));
             _context.SaveChanges();
-            return;
-        }
-
-        public List<Category>? GetCategory(int userId)
-        {
-            var restaurants = _context.Restaurants.FirstOrDefault(restaurant => restaurant.UserId == userId);
-            if (restaurants == null)
-            {
-                return null;
-            }
-            else
-            {
-                return restaurants.Categories.ToList();
-            }
         }
 
         public List<Restaurant> GetAll()
@@ -96,7 +80,6 @@ namespace YaLlegaBack.Repositories
             restaurantToEdit.ClosingTime = updatedRestaurant.ClosingTime;
             restaurantToEdit.Contact = updatedRestaurant.Contact;
             _context.SaveChanges();
-            return;
         }
     }
 }

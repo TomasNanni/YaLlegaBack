@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using YaLlega.Entities;
 
 namespace YaLlegaBack.Models
 {
     public class GetCategoryById
     {
-        [Key]
         public int Id { get; set; }
         [Required]
         [StringLength(20, MinimumLength = 1)]

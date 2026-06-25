@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace YaLlega.Entities
 {
@@ -24,7 +19,7 @@ namespace YaLlega.Entities
         [Required]
         public int Discount { get; set; } = 0;
         [Required]
-        public bool IsStandout = false;
+        public bool IsStandout { get; set; } = false;
         public TimeOnly? HappyHourStart { get; set; }
         public TimeOnly? HappyHourEnd { get; set; }
         public ICollection<Category> Categories{ get; set; } = new List<Category>();

@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-using YaLlega.Entities;
-using YaLlegaBack.Data;
+﻿using YaLlega.Entities;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 
@@ -114,46 +112,6 @@ namespace YaLlegaBack.Services
                     HappyHourStart = product.HappyHourStart,
                 };
             }
-        }
-
-        public List<GetCartByIdDto>? GetCart(int productId)
-        {
-            List<Cart>? carts = _productRepository.GetCart(productId);
-            return carts.Select(cart => new GetCartByIdDto
-            {
-                Products = cart.Products.Select(product => new ProductDataDto
-                {
-                    Name = product.Name,
-                    Description = product.Description,
-                    BasePrice = product.BasePrice,
-                    UrlImage = product.UrlImage,
-                    Discount = product.Discount,
-                    IsStandout = product.IsStandout,
-                    HappyHourEnd = product.HappyHourEnd,
-                    HappyHourStart = product.HappyHourStart,
-                }).ToList()
-            }).ToList();
-        }
-
-        public List<GetCategoryById>? GetCategories(int productId)
-        {
-            List<Category>? categories = _productRepository.GetCategoriesOfProduct(productId);
-            return categories.Select(categories => new GetCategoryById
-            {
-                Name = categories.Name,
-                Description = categories.Description,
-                Products = categories.Products.Select(product => new ProductDataDto
-                {
-                    Name = product.Name,
-                    Description = product.Description,
-                    BasePrice = product.BasePrice,
-                    UrlImage = product.UrlImage,
-                    Discount = product.Discount,
-                    IsStandout = product.IsStandout,
-                    HappyHourEnd = product.HappyHourEnd,
-                    HappyHourStart = product.HappyHourStart,
-                }).ToList()
-            }).ToList();
         }
 
         public ServiceResult Update(NewUpdatedProductDto updatedProduct, int productId)

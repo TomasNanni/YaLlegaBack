@@ -1,7 +1,5 @@
-﻿using Humanizer;
-using YaLlega.Entities;
+﻿using YaLlega.Entities;
 using YaLlega.Interfaces;
-using YaLlega.Repositories;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 

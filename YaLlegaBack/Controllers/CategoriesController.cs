@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YaLlega.Entities;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
-using YaLlegaBack.Services;
 
 
 namespace YaLlegaBack.Controllers

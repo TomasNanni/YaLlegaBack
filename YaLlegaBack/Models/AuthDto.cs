@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
 
-namespace YaLlega1.Models
+namespace YaLlegaBack.Models
 {
     public class AuthDto
     {

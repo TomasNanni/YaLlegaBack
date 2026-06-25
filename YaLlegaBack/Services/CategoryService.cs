@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using YaLlega.Entities;
-using YaLlegaBack.Data;
+﻿using YaLlega.Entities;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 
@@ -63,7 +61,7 @@ namespace YaLlegaBack.Services
             return new ServiceResult
             {
                 Message = "Producto/s borrado/s de categoría correctamente.",
-                StatusCode = 204,
+                StatusCode = 200,
             };
         }
         public ServiceResult AddProduct(int categoryId, List<int> productId)
@@ -95,7 +93,7 @@ namespace YaLlegaBack.Services
             return new ServiceResult
             {
                 Message = "Producto/s agregado/s a categoría correctamente.",
-                StatusCode = 204,
+                StatusCode = 200,
             };
         }
         public GetCategoryById? GetById(int categoryId)
@@ -137,7 +135,7 @@ namespace YaLlegaBack.Services
             return new ServiceResult
             {
                 Message = "La categoría se borró correctamente.",
-                StatusCode = 201,
+                StatusCode = 200,
             };
         }
         public GetCategoryById? Update(UpdatedCategoryDto dto, int categoryId)

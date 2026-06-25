@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using YaLlega.Entities;
 using YaLlegaBack.Data;
 using YaLlegaBack.Interfaces;
@@ -21,7 +20,7 @@ namespace YaLlegaBack.Repositories
             {
                 _context.Categories.Include(c => c.Products).First(c => c.Id == categoryId).Products.Add(_context.Products.FirstOrDefault(product => product.Id == id));
             }
-            return;
+            _context.SaveChanges();
         }
 
         public void DeleteProduct(List<int> productsToRemoveId, int categoryId)
@@ -31,7 +30,6 @@ namespace YaLlegaBack.Repositories
                 _context.Categories.Include(c => c.Products).First(c => c.Id == categoryId).Products.Remove(_context.Products.FirstOrDefault(product => product.Id == id));
             };
             _context.SaveChanges();
-            return;
         }
 
         public int Create(NewCategoryDto dto, List<int> productsId)
@@ -52,7 +50,6 @@ namespace YaLlegaBack.Repositories
         {
             _context.Categories.Remove(_context.Categories.Single(category => category.Id == categoryId));
             _context.SaveChanges();
-            return;
         }
 
         public Category? GetById(int categoryId)

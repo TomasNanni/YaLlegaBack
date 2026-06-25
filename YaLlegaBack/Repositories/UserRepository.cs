@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing.Constraints;
-using YaLlega.Entities;
+﻿using YaLlega.Entities;
 using YaLlega.Interfaces;
-using YaLlega1.Models;
 using YaLlegaBack.Data;
 
 namespace YaLlega.Repositories
@@ -40,11 +38,6 @@ namespace YaLlega.Repositories
         public User? GetByEmail(string userEmail)
         {
             return _context.Users.FirstOrDefault(user => user.EmailAddress.ToLower() == userEmail.ToLower());
-        }
-
-        public User? ValidateUser(AuthDto request)
-        {
-            return _context.Users.FirstOrDefault(user => user.EmailAddress == request.EmailAddress && user.Password == request.Password);
         }
 
         public void Update(User updatedUser, int userId)

@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using YaLlega.Entities;
-using YaLlega1.Models;
 using YaLlegaBack.Interfaces;
+using YaLlegaBack.Models;
 
 namespace YaLlegaBack.Controllers
 {
@@ -34,9 +32,9 @@ namespace YaLlegaBack.Controllers
 
             try
             {
-                User? user = _userService.Authenticate(credentials.EmailAddress, credentials.Password);
+                int? userId = _userService.Authenticate(credentials.EmailAddress, credentials.Password);
 
-                if (user is not null)
+                if (userId is not null)
                 {
                     var securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Authentication:SecretForKey"]));
 
@@ -44,7 +42,7 @@ namespace YaLlegaBack.Controllers
 
                     var claimsForToken = new List<Claim>
                     {
-                        new Claim("sub", user.Id.ToString()),
+                        new Claim("sub", userId.ToString()),
                     };
 
                     var jwtSecurityToken = new JwtSecurityToken(

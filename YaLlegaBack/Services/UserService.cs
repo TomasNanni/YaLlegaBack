@@ -1,13 +1,6 @@
-﻿using Humanizer;
-using System.Globalization;
-using System.Net.Mail;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
+﻿using System.Net.Mail;
 using YaLlega.Entities;
 using YaLlega.Interfaces;
-using YaLlega.Models;
-using YaLlega.Repositories;
-using YaLlega1.Models;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 
@@ -208,25 +201,7 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public UserDataDto? ValidateUser(AuthDto request)
-        {
-            var user = _userRepository.ValidateUser(request);
-            if (user == null)
-            {
-                return null;
-            }
-            else
-            {
-                return new UserDataDto
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EmailAddress = user.EmailAddress,
-                };
-            }
-        }
-
-        public User? Authenticate(string email, string password)
+        public int? Authenticate(string email, string password)
         {
             email = email.Trim().ToLower();
 
@@ -236,7 +211,7 @@ namespace YaLlegaBack.Services
                 return null;
 
             if (user.Password == password)
-                return user;
+                return user.Id;
 
             return null;
         }

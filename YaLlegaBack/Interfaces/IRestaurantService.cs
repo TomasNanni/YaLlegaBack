@@ -1,6 +1,4 @@
-﻿using YaLlega.Entities;
-using YaLlegaBack.Models;
-using YaLlegaBack.Services;
+﻿using YaLlegaBack.Models;
 
 namespace YaLlegaBack.Interfaces
 {

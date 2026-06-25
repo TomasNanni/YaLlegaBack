@@ -45,7 +45,6 @@ namespace YaLlegaBack.Repositories
         {
             _context.Products.Remove(_context.Products.Single(product => product.Id == productId));
             _context.SaveChanges();
-            return;
         }
 
         public List<Product> GetAll()
@@ -62,11 +61,7 @@ namespace YaLlegaBack.Repositories
         }
         public List<Category>? GetCategoriesOfProduct(int productId)
         {
-            return _context.Products.FirstOrDefault(product => product.Id == productId).Categories.ToList();
-        }
-        public List<Cart>? GetCart(int productId)
-        {
-            return _context.Products.FirstOrDefault(product => product.Id == productId).Carts.ToList();
+            return _context.Products.FirstOrDefault(product => product.Id == productId)?.Categories.ToList();
         }
 
         public void Update(Product updatedProduct, int productId)
@@ -81,7 +76,6 @@ namespace YaLlegaBack.Repositories
             productToEdit.HappyHourStart = updatedProduct.HappyHourStart;
             productToEdit.HappyHourEnd = updatedProduct.HappyHourEnd;
             _context.SaveChanges();
-            return;
         }
 
         public List<int> GetCategoryId(int productId)

@@ -1,6 +1,4 @@
-﻿using YaLlega.Models;
-
-namespace YaLlegaBack.Models
+﻿namespace YaLlegaBack.Models
 {
     public class CreateUserRequest
     {

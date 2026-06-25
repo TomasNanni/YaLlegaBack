@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using YaLlega.Entities;
 
-namespace YaLlega.Models
+namespace YaLlegaBack.Models
 {
     public class NewUpdatedUserDto
     {

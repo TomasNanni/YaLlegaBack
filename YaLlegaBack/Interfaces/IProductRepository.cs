@@ -1,5 +1,4 @@
 ﻿using YaLlega.Entities;
-using YaLlega1.Models;
 
 namespace YaLlegaBack.Interfaces
 {
@@ -11,7 +10,6 @@ namespace YaLlegaBack.Interfaces
         public List<Product> GetAll();
         public List<Category> GetCategories();
         public List<Category>? GetCategoriesOfProduct(int productId);
-        public List<Cart>? GetCart(int productId);
         public Product? GetById(int productId);
         public void Update(Product updatedProduct, int productId);
         public void Delete(int productId);
