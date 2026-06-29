@@ -166,13 +166,16 @@ namespace YaLlegaBack.Services
             {
                 throw new ArgumentException("El usuario que intentó actualizar no existe.");
             }
-            if (string.IsNullOrWhiteSpace(updatedUser.EmailAddress) || IsValidEmail(updatedUser.EmailAddress) == false)
+            if (updatedUser.EmailAddress != null)
             {
-                throw new ArgumentException("La dirección de email no existe o no es válida.");
-            }
-            if (GetByEmail(updatedUser.EmailAddress) != null)
-            {
-                throw new ArgumentException("Ya existe un usuario con la dirección de correo ingresada.");
+                if (!IsValidEmail(updatedUser.EmailAddress))
+                {
+                    throw new ArgumentException("La dirección de email no es válida.");
+                }
+                if (GetByEmail(updatedUser.EmailAddress) != null)
+                {
+                    throw new ArgumentException("Ya existe un usuario con la dirección de correo ingresada.");
+                }
             }
             User user = new User
             {

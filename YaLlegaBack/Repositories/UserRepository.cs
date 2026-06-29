@@ -43,9 +43,9 @@ namespace YaLlega.Repositories
         public void Update(User updatedUser, int userId)
         {
             var userToEdit = _context.Users.First(u => u.Id == userId);
-            userToEdit.FirstName = updatedUser.FirstName;
-            userToEdit.EmailAddress = updatedUser.EmailAddress;
-            userToEdit.LastName = updatedUser.LastName;
+            if (updatedUser.FirstName != null) userToEdit.FirstName = updatedUser.FirstName;
+            if (updatedUser.LastName != null) userToEdit.LastName = updatedUser.LastName;
+            if (updatedUser.EmailAddress != null) userToEdit.EmailAddress = updatedUser.EmailAddress;
             _context.SaveChanges();
         }
 
