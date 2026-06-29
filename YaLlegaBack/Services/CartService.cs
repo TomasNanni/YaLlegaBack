@@ -13,21 +13,25 @@ namespace YaLlegaBack.Services
             _cartRepository = cartRepository;
         }
 
-        public ServiceResult AddProduct(int productId, int cartId)
+        public ServiceResult AddProduct(List<int> productIds, int cartId)
         {
-            if (productId <= 0)
-                throw new ArgumentException("El id del producto debe ser mayor a 0");
+            if (productIds == null || productIds.Count == 0)
+                throw new ArgumentException("La lista de ids de productos no puede estar vacía");
+            if (productIds.Any(id => id <= 0))
+                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
 
-            _cartRepository.AddProduct(productId, cartId);
-            return new ServiceResult { Message = "Producto agregado correctamente.", StatusCode = 200 };
+            _cartRepository.AddProduct(productIds, cartId);
+            return new ServiceResult { Message = "Productos agregados correctamente.", StatusCode = 200 };
         }
 
-        public int? Create(int productId)
+        public int? Create(List<int> productIds)
         {
-            if (productId <= 0)
-                throw new ArgumentException("El id del producto debe ser mayor a 0");
+            if (productIds == null || productIds.Count == 0)
+                throw new ArgumentException("Debe ingresar al menos un producto");
+            if (productIds.Any(id => id <= 0))
+                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
 
-            var result = _cartRepository.Create(productId);
+            var result = _cartRepository.Create(productIds);
             if (result <= 0)
                 throw new ArgumentException("No se pudo crear el carrito");
 
@@ -43,13 +47,15 @@ namespace YaLlegaBack.Services
             return new ServiceResult { Message = "Pedido borrado exitosamente.", StatusCode = 200 };
         }
 
-        public ServiceResult DeleteProduct(int productId, int cartId)
+        public ServiceResult DeleteProduct(List<int> productIds, int cartId)
         {
-            if (productId <= 0)
-                throw new ArgumentException("El id del producto debe ser mayor a 0");
+            if (productIds == null || productIds.Count == 0)
+                throw new ArgumentException("La lista de ids de productos no puede estar vacía");
+            if (productIds.Any(id => id <= 0))
+                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
 
-            _cartRepository.DeleteProduct(productId, cartId);
-            return new ServiceResult { Message = "Producto removido correctamente del carrito.", StatusCode = 200 };
+            _cartRepository.DeleteProduct(productIds, cartId);
+            return new ServiceResult { Message = "Productos removidos correctamente del carrito.", StatusCode = 200 };
         }
 
         public GetCartByIdDto? GetById(int cartId)

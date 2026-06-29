@@ -42,17 +42,21 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpPost("Create/{productId}")]
-        public IActionResult Create(int productId)
+        [HttpPost("Create")]
+        public IActionResult Create([FromBody] List<int> productIds)
         {
-            if (productId <= 0)
+            if (productIds == null || productIds.Count == 0)
             {
-                return BadRequest("El id del producto debe ser mayor a 0");
+                return BadRequest("Debe ingresar al menos un producto.");
+            }
+            if (productIds.Any(id => id <= 0))
+            {
+                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
             }
 
             try
             {
-                var result = _cartService.Create(productId);
+                var result = _cartService.Create(productIds);
                 if (result == null || result <= 0)
                 {
                     return BadRequest("No se pudo crear el carrito");
@@ -69,21 +73,25 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpPatch("AddProducts/{cartId}/{productId}")]
-        public IActionResult AddProduct(int cartId, int productId)
+        [HttpPatch("AddProducts/{cartId}")]
+        public IActionResult AddProduct([FromBody] List<int> productIds, int cartId)
         {
             if (cartId <= 0)
             {
                 return BadRequest("El id del carrito debe ser mayor a 0.");
             }
-            if (productId <= 0)
+            if (productIds == null || productIds.Count == 0)
             {
-                return BadRequest("El id del producto debe ser mayor a 0.");
+                return BadRequest("Debe ingresar minimo un producto que agregar.");
+            }
+            if (productIds.Any(id => id <= 0))
+            {
+                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
             }
 
             try
             {
-                ServiceResult result = _cartService.AddProduct(productId, cartId);
+                ServiceResult result = _cartService.AddProduct(productIds, cartId);
                 return StatusCode(result.StatusCode, result.Message);
             }
             catch (ArgumentException ex)
@@ -96,21 +104,25 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpPatch("DeleteProducts/{cartId}/{productId}")]
-        public IActionResult DeleteProduct(int cartId, int productId)
+        [HttpPatch("DeleteProducts/{cartId}")]
+        public IActionResult DeleteProduct([FromBody] List<int> productIds, int cartId)
         {
             if (cartId <= 0)
             {
                 return BadRequest("El id del carrito debe ser mayor a 0.");
             }
-            if (productId <= 0)
+            if (productIds == null || productIds.Count == 0)
             {
-                return BadRequest("El id del producto debe ser mayor a 0.");
+                return BadRequest("Debe ingresar minimo un producto que quitar del carrito.");
+            }
+            if (productIds.Any(id => id <= 0))
+            {
+                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
             }
 
             try
             {
-                ServiceResult result = _cartService.DeleteProduct(productId, cartId);
+                ServiceResult result = _cartService.DeleteProduct(productIds, cartId);
                 return StatusCode(result.StatusCode, result.Message);
             }
             catch (ArgumentException ex)
