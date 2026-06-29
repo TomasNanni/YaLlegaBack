@@ -69,25 +69,21 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpPatch("AddProducts/{cartId}")]
-        public IActionResult AddProduct([FromBody] List<int> productIds, int cartId)
+        [HttpPatch("AddProducts/{cartId}/{productId}")]
+        public IActionResult AddProduct(int cartId, int productId)
         {
             if (cartId <= 0)
             {
                 return BadRequest("El id del carrito debe ser mayor a 0.");
             }
-            if (productIds == null || productIds.Count == 0)
+            if (productId <= 0)
             {
-                return BadRequest("Debe ingresar minimo un producto que agregar.");
-            }
-            if (productIds.Any(id => id <= 0))
-            {
-                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
+                return BadRequest("El id del producto debe ser mayor a 0.");
             }
 
             try
             {
-                ServiceResult result = _cartService.AddProduct(productIds, cartId);
+                ServiceResult result = _cartService.AddProduct(productId, cartId);
                 return StatusCode(result.StatusCode, result.Message);
             }
             catch (ArgumentException ex)
@@ -99,25 +95,22 @@ namespace YaLlegaBack.Controllers
                 return StatusCode(500, "Error interno del servidor");
             }
         }
-        [HttpPatch("DeleteProducts/{cartId}")]
-        public IActionResult DeleteProduct([FromBody] List<int> productIds, int cartId)
+
+        [HttpPatch("DeleteProducts/{cartId}/{productId}")]
+        public IActionResult DeleteProduct(int cartId, int productId)
         {
             if (cartId <= 0)
             {
                 return BadRequest("El id del carrito debe ser mayor a 0.");
             }
-            if (productIds == null || productIds.Count == 0)
+            if (productId <= 0)
             {
-                return BadRequest("Debe ingresar minimo un producto que quitar del carrito.");
-            }
-            if (productIds.Any(id => id <= 0))
-            {
-                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
+                return BadRequest("El id del producto debe ser mayor a 0.");
             }
 
             try
             {
-                ServiceResult result = _cartService.DeleteProduct(productIds, cartId);
+                ServiceResult result = _cartService.DeleteProduct(productId, cartId);
                 return StatusCode(result.StatusCode, result.Message);
             }
             catch (ArgumentException ex)

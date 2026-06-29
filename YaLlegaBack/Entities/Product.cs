@@ -23,6 +23,5 @@ namespace YaLlega.Entities
         public TimeOnly? HappyHourStart { get; set; }
         public TimeOnly? HappyHourEnd { get; set; }
         public ICollection<Category> Categories{ get; set; } = new List<Category>();
-        public ICollection<Cart> Carts { get; set; } = new List<Cart>();
     }
 }

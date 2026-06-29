@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using YaLlegaBack.Models;
 
 namespace YaLlega.Entities
 {
@@ -9,6 +10,6 @@ namespace YaLlega.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public ICollection<Product> Products{ get; set; } = new List<Product>();
+        public ICollection<CartProductOrder> Products{ get; set; } = new List<CartProductOrder>();
     }
 }
