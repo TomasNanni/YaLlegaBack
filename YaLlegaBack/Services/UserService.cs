@@ -45,7 +45,7 @@ namespace YaLlegaBack.Services
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
                 EmailAddress = newUser.EmailAddress,
-                Password = newUser.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password),
             };
             int? newUserId = _userRepository.Create(user);
             if (newUserId == null || newUserId <= 0)
@@ -210,7 +210,7 @@ namespace YaLlegaBack.Services
             if (user is null)
                 return null;
 
-            if (user.Password == password)
+            if (BCrypt.Net.BCrypt.Verify(password, user.Password))
                 return user.Id;
 
             return null;
