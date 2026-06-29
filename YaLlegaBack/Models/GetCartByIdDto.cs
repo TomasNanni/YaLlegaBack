@@ -7,6 +7,6 @@ namespace YaLlegaBack.Models
         [Required]
         public int Id { get; set; }
         [Required]
-        public ICollection<ProductDataDto> Products { get; set; } = new List<ProductDataDto>();
+        public ICollection<CartProductDataDto> Products { get; set; } = new List<CartProductDataDto>();
     }
 }

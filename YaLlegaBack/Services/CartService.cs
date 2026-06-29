@@ -69,7 +69,7 @@ namespace YaLlegaBack.Services
             {
                 var product = order.Product!;
                 var restaurant = product.Categories.First().Restaurant;
-                return new ProductDataDto
+                return new CartProductDataDto
                 {
                     Id = product.Id,
                     Name = product.Name,
@@ -82,6 +82,7 @@ namespace YaLlegaBack.Services
                     HappyHourEnd = product.HappyHourEnd,
                     RestaurantName = restaurant.Name,
                     RestaurantId = restaurant.UserId,
+                    Amount = order.Amount,
                 };
             }).ToList();
             return cartForController;
