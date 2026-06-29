@@ -22,7 +22,7 @@ namespace YaLlegaBack.Services
             return _userRepository.CheckIfUserExists(userId);
         }
 
-        public int? Create(NewUpdatedUserDto newUser, NewUpdatedRestaurantDTO newRestaurantData)
+        public int? Create(NewUserDto newUser, NewUpdatedRestaurantDTO newRestaurantData)
         {
             if (newUser == null)
             {
@@ -152,7 +152,7 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public ServiceResult Update(NewUpdatedUserDto updatedUser, int userId)
+        public ServiceResult Update(UpdateUserDto updatedUser, int userId)
         {
             if (userId <= 0)
             {

@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace YaLlegaBack.Models
 {
-    public class NewUpdatedUserDto
+    public class UpdateUserDto
     {
         [Required]
         [StringLength(20)]
@@ -14,12 +13,5 @@ namespace YaLlegaBack.Models
         [EmailAddress]
         [StringLength(30)]
         public string EmailAddress { get; set; }
-        [Required]
-        [PasswordPropertyText]
-        public string Password { get; set; }
-        [Required]
-        [PasswordPropertyText]
-        [Compare("Password")]
-        public string SecondPassword{ get; set; }
     }
 }

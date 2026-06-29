@@ -135,7 +135,7 @@ namespace YaLlegaBack.Controllers
 
         [HttpPut("Update")]
         [Authorize]
-        public IActionResult UpdateUser(NewUpdatedUserDto updatedUser)
+        public IActionResult UpdateUser(UpdateUserDto updatedUser)
         {
             if (updatedUser == null)
             {

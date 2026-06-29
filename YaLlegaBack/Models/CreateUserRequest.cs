@@ -2,7 +2,7 @@
 {
     public class CreateUserRequest
     {
-        public NewUpdatedUserDto User { get; set; }
+        public NewUserDto User { get; set; }
         public NewUpdatedRestaurantDTO Restaurant { get; set; }
     }
 }
