@@ -43,6 +43,7 @@ namespace YaLlegaBack.Controllers
                     var claimsForToken = new List<Claim>
                     {
                         new Claim("sub", userId.ToString()),
+                        new Claim("")
                     };
 
                     var jwtSecurityToken = new JwtSecurityToken(

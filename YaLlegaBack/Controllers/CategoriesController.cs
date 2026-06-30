@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 
@@ -16,16 +17,22 @@ namespace YaLlegaBack.Controllers
             _categoryService = categoryService;
         }
         [HttpPost("Create")]
-        [AllowAnonymous]
+        [Authorize]
         public IActionResult Create([FromBody] NewCategoryDto dto)
         {
             if (dto == null)
             {
                 return BadRequest("Debe proporcionar datos válidos de la categoría.");
             }
+            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
+            if (userId <= 0)
+            {
+                return Unauthorized("Usuario no validado.");
+            }
 
             try
             {
+                dto.RestaurantUserId = userId;
                 var categoryId = _categoryService.Create(dto, dto.productsId);
                 if (categoryId == null || categoryId <= 0)
                 {
