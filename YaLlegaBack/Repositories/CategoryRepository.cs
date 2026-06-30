@@ -54,7 +54,7 @@ namespace YaLlegaBack.Repositories
 
         public Category? GetById(int categoryId)
         {
-            return _context.Categories.FirstOrDefault(category => category.Id == categoryId);
+            return _context.Categories.Include(c => c.Products).FirstOrDefault(category => category.Id == categoryId);
         }
 
         public Category? Update(UpdatedCategoryDto dto, int categoryId)
