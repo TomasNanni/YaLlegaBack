@@ -26,11 +26,6 @@ namespace YaLlega.Repositories
 
 
 
-        public List<User> GetAll()
-        {
-            return _context.Users.ToList();
-        }
-
         public User? GetById(int userId)
         {
             return _context.Users.FirstOrDefault(user => user.Id == userId);

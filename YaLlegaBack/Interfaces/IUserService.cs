@@ -7,7 +7,6 @@ namespace YaLlegaBack.Interfaces
     {
         public int? Create(NewUserDto newUser, NewUpdatedRestaurantDTO newRestaurantData);
         public bool CheckIfUserExists(int userId);
-        public IEnumerable<UserDataDto> GetAll();
         public GetUserByIdDto? GetById(int userId);
         public GetUserByIdDto? GetByEmail(string email);
         public ServiceResult Update(UpdateUserDto updatedUser, int userId);

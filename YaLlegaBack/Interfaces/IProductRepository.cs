@@ -7,7 +7,6 @@ namespace YaLlegaBack.Interfaces
         public int Create(Product newProduct, List<int> categoriesId);
         public bool CheckIfProductExists(int productId);
         public bool CheckIfProductNameExists(string productName, List<Category> categories);
-        public List<Product> GetAll();
         public List<Category> GetCategories();
         public List<Category>? GetCategoriesOfProduct(int productId);
         public Product? GetById(int productId);

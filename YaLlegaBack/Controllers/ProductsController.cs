@@ -15,25 +15,6 @@ namespace YaLlegaBack.Controllers
             _productService = productService;
         }
 
-        [HttpGet("GetAll")]
-        [Authorize]
-        public ActionResult<ProductDataDto> GetAll()
-        {
-            try
-            {
-                IEnumerable<ProductDataDto> products = _productService.GetAll();
-                if (products?.Any() != true)
-                {
-                    return NoContent();
-                }
-                return Ok(products);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-
         [HttpGet("GetOneByid/{id}")]
         public IActionResult GetOneById(int id)
         {

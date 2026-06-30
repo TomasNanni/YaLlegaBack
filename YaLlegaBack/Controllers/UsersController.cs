@@ -17,25 +17,6 @@ namespace YaLlegaBack.Controllers
             _userService = UserService;
         }
 
-        [HttpGet("GetAll")]
-        [Authorize]
-        public ActionResult<UserDataDto> GetAll()
-        {
-            try
-            {
-                IEnumerable<UserDataDto> users = _userService.GetAll();
-                if (users?.Any() != true)
-                {
-                    return NoContent();
-                }
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-
         [HttpGet("GetOneByid/{id}")]
         [Authorize]
         public IActionResult GetOneById(int id)
@@ -66,36 +47,6 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpGet("GetOneByEmail/{email}")]
-        public IActionResult GetOneByEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return BadRequest("Debe ingresar una dirección de email válida.");
-            }
-
-            try
-            {
-                GetUserByIdDto? user = _userService.GetByEmail(email);
-
-                if (user is null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(user);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-
- 
         [HttpPost("Create")]
         [AllowAnonymous]
         public IActionResult Create([FromBody] CreateUserRequest dto)

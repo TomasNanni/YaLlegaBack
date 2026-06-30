@@ -102,18 +102,6 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public IEnumerable<UserDataDto> GetAll()
-        {
-            return _userRepository.GetAll().Select(user =>
-            new UserDataDto
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                EmailAddress = user.EmailAddress,
-                Restaurant = user.Restaurant,
-            });
-        }
-
         public GetUserByIdDto? GetById(int userId)
         {
             var user = _userRepository.GetById(userId);

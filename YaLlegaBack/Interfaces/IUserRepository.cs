@@ -6,7 +6,6 @@ namespace YaLlega.Interfaces
     {
         public int Create(User newUser);
         public bool CheckIfUserExists(int userId);
-        public List<User> GetAll();
         public Restaurant? GetRestaurant(int userId);
         public User? GetById(int userId);
         public User? GetByEmail(string userEmail);

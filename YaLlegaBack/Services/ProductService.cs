@@ -74,22 +74,6 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public List<ProductDataDto> GetAll()
-        {
-            List<Product> products = _productRepository.GetAll();
-            return products.Select(product => new ProductDataDto
-            {
-                Name = product.Name,
-                Description = product.Description,
-                UrlImage = product.UrlImage,
-                BasePrice = product.BasePrice,
-                Discount = product.Discount,
-                IsStandout = product.IsStandout,
-                HappyHourStart = product.HappyHourStart,
-                HappyHourEnd = product.HappyHourEnd,
-            }).ToList();
-        }
-
         public ProductDataDto? GetById(int productId)
         {
             Product? product = _productRepository.GetById(productId);

@@ -47,10 +47,6 @@ namespace YaLlegaBack.Repositories
             _context.SaveChanges();
         }
 
-        public List<Product> GetAll()
-        {
-            return _context.Products.ToList();
-        }
         public Product? GetById(int productId)
         {
             return _context.Products.FirstOrDefault(product => product.Id == productId);
