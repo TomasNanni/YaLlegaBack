@@ -59,19 +59,16 @@ namespace YaLlegaBack.Services
                 throw new ArgumentException("El producto no existe.");
             }
             List<int> categoriesId = _productRepository.GetCategoryId(productId);
-            if (_categoryService.RemoveProduct(productId, categoriesId).StatusCode == 200)
+            foreach (var categoryId in categoriesId)
             {
-                _productRepository.Delete(productId);
-                return new ServiceResult
-                {
-                    Message = "Producto borrado correctamente.",
-                    StatusCode = 200
-                };
+                _categoryService.RemoveProduct(categoryId, new List<int> { productId });
             }
-            else
+            _productRepository.Delete(productId);
+            return new ServiceResult
             {
-                throw new ArgumentException("No se encontró categoría a la cual pertenezca el producto.");
-            }
+                Message = "Producto borrado correctamente.",
+                StatusCode = 200
+            };
         }
 
         public ProductDataDto? GetById(int productId)
