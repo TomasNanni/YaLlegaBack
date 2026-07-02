@@ -8,7 +8,6 @@ namespace YaLlegaBack.Interfaces
         public bool CheckIfRestaurantNameExists(string name);
         public IEnumerable<GetRestaurantByIdDto> GetAll();
         public GetRestaurantByIdDto? GetById(int userId);
-        public ServiceResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int userId);
         public ServiceResult Delete(int restaurantId);
         public int? Create(NewUpdatedRestaurantDTO newRestaurant, int? userId);
         public bool? RestaurantIsOpen(int userId);

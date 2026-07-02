@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -43,7 +42,7 @@ namespace YaLlegaBack.Controllers
                     var claimsForToken = new List<Claim>
                     {
                         new Claim("sub", userId.ToString()),
-                        new Claim("")
+                        //new Claim("")
                     };
 
                     var jwtSecurityToken = new JwtSecurityToken(
@@ -60,47 +59,6 @@ namespace YaLlegaBack.Controllers
                 }
 
                 return Unauthorized();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-        [HttpGet("validateOwner/{restaurantId}")]
-        [Authorize]
-        public IActionResult ValidateOwner(int restaurantId)
-        {
-            if (restaurantId <= 0)
-            {
-                return BadRequest("El id debe ser mayor a 0");
-            }
-
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
-                if (string.IsNullOrEmpty(userIdClaim))
-                {
-                    return Unauthorized("Usuario no validado.");
-                }
-
-                int userId = int.Parse(userIdClaim);
-                if (userId <= 0)
-                {
-                    return Unauthorized("Usuario inválido.");
-                }
-
-                if (userId == restaurantId)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return Forbid();
-                }
             }
             catch (ArgumentException ex)
             {

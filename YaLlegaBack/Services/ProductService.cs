@@ -71,6 +71,15 @@ namespace YaLlegaBack.Services
             };
         }
 
+        public List<int>? GetCategoryIds(int productId)
+        {
+            if (_productRepository.CheckIfProductExists(productId) == false)
+            {
+                return null;
+            }
+            return _productRepository.GetCategoryId(productId);
+        }
+
         public ProductDataDto? GetById(int productId)
         {
             Product? product = _productRepository.GetById(productId);

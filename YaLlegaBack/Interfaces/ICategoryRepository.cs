@@ -11,9 +11,9 @@ namespace YaLlegaBack.Interfaces
         public void Delete(int categoryId);
         public int Create(NewCategoryDto dto, List<int> productsId);
         public void DeleteProduct(List<int> productsToRemoveId, int categoryId);
-        public void AddProduct(List<int> productsToAddId, int categoryId);
         public bool CheckIfProductBelongs(int productId, int categoryId);
         public bool CheckIfCategoryNameExists(string categoryName);
         public List<Category>? GetRestaurantCategories(int restaurantId);
+        public int? GetOwnerId(int categoryId);
     }
 }

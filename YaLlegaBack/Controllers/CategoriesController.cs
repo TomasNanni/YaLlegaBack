@@ -12,9 +12,11 @@ namespace YaLlegaBack.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public CategoriesController(ICategoryService categoryService)
+        private readonly IProductService _productService;
+        public CategoriesController(ICategoryService categoryService, IProductService productService)
         {
             _categoryService = categoryService;
+            _productService = productService;
         }
         [HttpPost("Create")]
         [Authorize]
@@ -24,10 +26,20 @@ namespace YaLlegaBack.Controllers
             {
                 return BadRequest("Debe proporcionar datos válidos de la categoría.");
             }
-            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
-            if (userId <= 0)
+            if (!int.TryParse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out int userId) || userId <= 0)
             {
                 return Unauthorized("Usuario no validado.");
+            }
+            if (dto.productsId != null)
+            {
+                foreach (var productId in dto.productsId)
+                {
+                    List<int>? existingCategoryIds = _productService.GetCategoryIds(productId);
+                    if (existingCategoryIds != null && existingCategoryIds.Any(existingCategoryId => _categoryService.GetOwnerId(existingCategoryId) != userId))
+                    {
+                        return Forbid();
+                    }
+                }
             }
 
             try
@@ -91,9 +103,33 @@ namespace YaLlegaBack.Controllers
             {
                 return BadRequest("Debe proporcionar datos válidos de la categoría.");
             }
+            if (!int.TryParse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out int userId) || userId <= 0)
+            {
+                return Unauthorized("Usuario no validado.");
+            }
 
             try
             {
+                int? ownerId = _categoryService.GetOwnerId(id);
+                if (ownerId == null)
+                {
+                    return NotFound();
+                }
+                if (ownerId != userId)
+                {
+                    return Forbid();
+                }
+                if (updatedCategory.ProductIds != null)
+                {
+                    foreach (var productId in updatedCategory.ProductIds)
+                    {
+                        List<int>? existingCategoryIds = _productService.GetCategoryIds(productId);
+                        if (existingCategoryIds != null && existingCategoryIds.Any(existingCategoryId => _categoryService.GetOwnerId(existingCategoryId) != userId))
+                        {
+                            return Forbid();
+                        }
+                    }
+                }
                 GetCategoryById? result = _categoryService.Update(updatedCategory, id);
                 if (result == null)
                 {
@@ -119,72 +155,23 @@ namespace YaLlegaBack.Controllers
             {
                 return BadRequest("El ID de la categoría debe ser mayor a 0.");
             }
+            if (!int.TryParse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out int userId) || userId <= 0)
+            {
+                return Unauthorized("Usuario no validado.");
+            }
 
             try
             {
+                int? ownerId = _categoryService.GetOwnerId(id);
+                if (ownerId == null)
+                {
+                    return NotFound();
+                }
+                if (ownerId != userId)
+                {
+                    return Forbid();
+                }
                 ServiceResult result = _categoryService.Delete(id);
-                return StatusCode(result.StatusCode, result.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-        [HttpPut("AddProduct")]
-        [Authorize]
-        public IActionResult AddProduct([FromBody] List<int> productsId, int categoryId)
-        {
-            if (categoryId <= 0)
-            {
-                return BadRequest("El ID de la categoría debe ser mayor a 0.");
-            }
-            if (productsId == null || productsId.Count == 0)
-            {
-                return BadRequest("Debe ingresar minimo un producto que agregar.");
-            }
-            if (productsId.Any(id => id <= 0))
-            {
-                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
-            }
-
-            try
-            {
-                ServiceResult result = _categoryService.AddProduct(categoryId, productsId);
-                return StatusCode(result.StatusCode, result.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-        [HttpPut("RemoveProduct")]
-        [Authorize]
-        public IActionResult RemoveProduct([FromBody] List<int> productsId, int categoryId)
-        {
-            if (categoryId <= 0)
-            {
-                return BadRequest("El ID de la categoría debe ser mayor a 0.");
-            }
-            if (productsId == null || productsId.Count == 0)
-            {
-                return BadRequest("Debe ingresar minimo un producto que quitar.");
-            }
-            if (productsId.Any(id => id <= 0))
-            {
-                return BadRequest("Todos los ids de productos deben ser mayores a 0.");
-            }
-
-            try
-            {
-                ServiceResult result = _categoryService.RemoveProduct(categoryId, productsId);
                 return StatusCode(result.StatusCode, result.Message);
             }
             catch (ArgumentException ex)
