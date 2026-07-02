@@ -14,15 +14,6 @@ namespace YaLlegaBack.Repositories
         {
             _context = context;
         }
-        public void AddProduct(List<int> productsToAddId, int categoryId)
-        {
-            foreach (var id in productsToAddId)
-            {
-                _context.Categories.Include(c => c.Products).First(c => c.Id == categoryId).Products.Add(_context.Products.FirstOrDefault(product => product.Id == id));
-            }
-            _context.SaveChanges();
-        }
-
         public void DeleteProduct(List<int> productsToRemoveId, int categoryId)
         {
             foreach (var id in productsToRemoveId)
@@ -78,6 +69,10 @@ namespace YaLlegaBack.Repositories
         public bool CheckIfCategoryNameExists(string categoryName)
         {
             return _context.Categories.Any (c => c.Name == categoryName);
+        }
+        public int? GetOwnerId(int categoryId)
+        {
+            return _context.Categories.FirstOrDefault(c => c.Id == categoryId)?.RestaurantUserId;
         }
         public List<Category>? GetRestaurantCategories(int restaurantId)
         {

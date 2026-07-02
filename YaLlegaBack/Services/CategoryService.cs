@@ -64,38 +64,6 @@ namespace YaLlegaBack.Services
                 StatusCode = 200,
             };
         }
-        public ServiceResult AddProduct(int categoryId, List<int> productId)
-        {
-            if (categoryId <= 0)
-            {
-                throw new ArgumentException("El id de la categoría debe ser mayor a 0");
-            }
-            if (productId == null || productId.Count == 0)
-            {
-                throw new ArgumentException("La lista de ids de productos no puede estar vacía");
-            }
-            if (productId.Any(id => id <= 0))
-            {
-                throw new ArgumentException("Todos los ids de productos deben ser mayores a 0");
-            }
-            if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
-            {
-                throw new ArgumentException("No existe categoría con el id indicado.");
-            }
-            foreach (var id in productId)
-            {
-                if (_categoryRepository.CheckIfProductBelongs(id, categoryId) == true)
-                {
-                    throw new ArgumentException($"El producto de id {id} ya pertenece a la categoría");
-                }
-            }
-            _categoryRepository.AddProduct(productId, categoryId);
-            return new ServiceResult
-            {
-                Message = "Producto/s agregado/s a categoría correctamente.",
-                StatusCode = 200,
-            };
-        }
         public GetCategoryById? GetById(int categoryId)
         {
             if (_categoryRepository.CheckIfCategoryExists(categoryId) == false)
@@ -174,6 +142,10 @@ namespace YaLlegaBack.Services
                 }).ToList(),
             };
             return categoryToReturn;
+        }
+        public int? GetOwnerId(int categoryId)
+        {
+            return _categoryRepository.GetOwnerId(categoryId);
         }
         public List<GetCategoryById>? GetRestaurantCategories(int restaurantId)
         {

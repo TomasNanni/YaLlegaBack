@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc;
 using YaLlegaBack.Interfaces;
 using YaLlegaBack.Models;
 
@@ -63,34 +61,6 @@ namespace YaLlegaBack.Controllers
             }
         }
 
-        [HttpPut("Update")]
-        [Authorize]
-        public IActionResult Update(NewUpdatedRestaurantDTO updatedRestaurant)
-        {
-            if (updatedRestaurant == null)
-            {
-                return BadRequest("Debe proporcionar datos válidos del restaurante.");
-            }
-
-            try
-            {
-                int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
-                if (userId <= 0)
-                {
-                    return Unauthorized("Usuario no validado.");
-                }
-                ServiceResult result = _restaurantService.Update(updatedRestaurant, userId);
-                return StatusCode(result.StatusCode, result.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
         [HttpGet("IsOpen/{id}")]
         public IActionResult IsOpen(int id)
         {

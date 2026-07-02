@@ -68,18 +68,5 @@ namespace YaLlegaBack.Repositories
         {
             return _context.Restaurants.Any(restaurant => restaurant.Name == name);
         }
-
-        public void Update(Restaurant updatedRestaurant, int userId)
-        {
-            var restaurantToEdit = _context.Restaurants.First(u => u.UserId == userId);
-            restaurantToEdit.Name = updatedRestaurant.Name;
-            restaurantToEdit.UrlLogoImage = updatedRestaurant.UrlLogoImage;
-            restaurantToEdit.UrlBannerImage = updatedRestaurant.UrlBannerImage;
-            restaurantToEdit.OpenDays = updatedRestaurant.OpenDays;
-            restaurantToEdit.OpeningTime = updatedRestaurant.OpeningTime;
-            restaurantToEdit.ClosingTime = updatedRestaurant.ClosingTime;
-            restaurantToEdit.Contact = updatedRestaurant.Contact;
-            _context.SaveChanges();
-        }
     }
 }

@@ -118,41 +118,6 @@ namespace YaLlegaBack.Services
             }
         }
 
-        public ServiceResult Update(NewUpdatedRestaurantDTO updatedRestaurant, int restaurantId)
-        {
-            if (restaurantId <= 0)
-            {
-                throw new ArgumentException("El id del restaurante debe ser mayor a 0");
-            }
-            if (updatedRestaurant == null)
-            {
-                throw new ArgumentException("Los datos del restaurante no pueden estar vacíos");
-            }
-            if (string.IsNullOrWhiteSpace(updatedRestaurant.Name))
-            {
-                throw new ArgumentException("El nombre del restaurante no puede estar vacío");
-            }
-            if (CheckIfRestaurantNameExists(updatedRestaurant.Name) == true)
-            {
-                throw new ArgumentException("El nombre del restaurante ya existe.");
-            }
-            var restaurant = new Restaurant
-            {
-                Name = updatedRestaurant.Name,
-                UrlLogoImage = updatedRestaurant.UrlLogoImage,
-                UrlBannerImage = updatedRestaurant.UrlBannerImage,
-                OpenDays = updatedRestaurant.OpenDays,
-                OpeningTime = updatedRestaurant.OpeningTime,
-                ClosingTime = updatedRestaurant.ClosingTime,
-                Contact = updatedRestaurant.Contact,
-            };
-            _restaurantRepository.Update(restaurant, restaurantId);
-            return new ServiceResult
-            {
-                Message = "Restaurante actualizado correctamente",
-                StatusCode = 200,
-            };
-        }
         public bool? RestaurantIsOpen (int userId)
         {
             return _restaurantRepository.RestaurantIsOpen(userId);

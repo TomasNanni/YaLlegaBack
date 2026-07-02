@@ -9,5 +9,6 @@ namespace YaLlegaBack.Interfaces
         public ProductDataDto? GetById(int productId);
         public ServiceResult Update(NewUpdatedProductDto updatedProduct, int productId);
         public ServiceResult Delete(int productId);
+        public List<int>? GetCategoryIds(int productId);
     }
 }
